@@ -6,6 +6,23 @@ DATA_DIR = "data/"
 TXT_DIR = os.path.join(DATA_DIR, "txt")
 OUT_DIR = os.path.join(DATA_DIR, "json")
 
+def parse_chapter_content(chapter_path):
+    # List of encodings to try
+    encodings = ['iso-8859-1', 'utf-16-le', 'utf-8']
+    
+    for encoding in encodings:
+        try:
+            with open(chapter_path, 'r', encoding=encoding) as f:
+                chapter_content = f.read()
+            # If we got here, the reading was successful
+            return chapter_content.strip()  # Remove leading/trailing whitespace
+        except UnicodeDecodeError:
+            # If this encoding didn't work, continue to the next one
+            continue
+    
+    # If we get here, none of the encodings worked
+    raise ValueError(f"Failed to decode file {chapter_path} with encodings: {', '.join(encodings)}")
+
 def parse_book_name(raw_name):
     # Remove the number followed by spaces before the book name
     parsed_name = re.sub(r'^\d+\s+', '', raw_name)
@@ -35,6 +52,9 @@ def main():
             for chapter_file_name in chapters_list:
                 print(f"\t\tChapter: {chapter_file_name}")
                 chapter_path = os.path.join(book_path, chapter_file_name)
+                chapter_content = parse_chapter_content(chapter_path)
+                print(chapter_content)
+            input()
 
 if __name__ == "__main__":
     main()
