@@ -9,19 +9,29 @@ OUT_DIR = os.path.join(DATA_DIR, "json")
 def parse_chapter_content(chapter_path):
     # List of encodings to try
     encodings = ['iso-8859-1', 'utf-16-le', 'utf-8']
-    
+
+    chapter_content = None
+
     for encoding in encodings:
         try:
             with open(chapter_path, 'r', encoding=encoding) as f:
                 chapter_content = f.read()
-            # If we got here, the reading was successful
-            return chapter_content.strip()  # Remove leading/trailing whitespace
         except UnicodeDecodeError:
             # If this encoding didn't work, continue to the next one
             continue
     
-    # If we get here, none of the encodings worked
-    raise ValueError(f"Failed to decode file {chapter_path} with encodings: {', '.join(encodings)}")
+    if chapter_content is None:
+        raise ValueError(f"Failed to decode file {chapter_path} with encodings: {', '.join(encodings)}")
+    else:
+        # Split the content into lines
+        lines = chapter_content.splitlines()
+        # Remove empty lines
+        lines = [line for line in lines if line.strip()]
+        # Remove lines that does not start with a number
+        lines = [line for line in lines if re.match(r'^\d+', line)]
+        # Remove numbers followed by dot and spaces in the beginning of the line
+        lines = [re.sub(r'^\d+\.\s+', '', line) for line in lines]
+        return lines
 
 def parse_book_name(raw_name):
     # Remove the number followed by spaces before the book name
@@ -31,30 +41,39 @@ def parse_book_name(raw_name):
 
     return parsed_name
 
+def create_dir_if_not_exists(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
 def main():
     # Find bibles
+    create_dir_if_not_exists(OUT_DIR)
     bibles_list = os.listdir(TXT_DIR)
     bibles_list.sort()
     for bible_name in bibles_list:
-        print(f"Bible: {bible_name}")
-        bible_name = os.path.join(TXT_DIR, bible_name)
-        bible_dict = {}
+        bible_path = os.path.join(TXT_DIR, bible_name)
+        out_dict = {"bible": {}}
+        bible_dict = out_dict["bible"]
         bible_dict["name"] = bible_name
         bible_dict["books"] = []
-        books_list = os.listdir(bible_name)
+        books_dict = bible_dict["books"]
+        books_list = os.listdir(bible_path)
         books_list.sort()
         for book_name in books_list:
             book_parsed = parse_book_name(book_name)
-            print(f"\tBook: {book_parsed}")
-            book_path = os.path.join(bible_name, book_name)
+            this_book_dict = {"name": book_parsed, "chapters": []}
+            print(f"Parsing book {book_parsed} from bible {bible_name}")
+            book_path = os.path.join(bible_path, book_name)
             chapters_list = os.listdir(book_path)
             chapters_list.sort()
             for chapter_file_name in chapters_list:
-                print(f"\t\tChapter: {chapter_file_name}")
                 chapter_path = os.path.join(book_path, chapter_file_name)
-                chapter_content = parse_chapter_content(chapter_path)
-                print(chapter_content)
-            input()
+                verses_dict = parse_chapter_content(chapter_path)
+                this_book_dict["chapters"].append(verses_dict)
+            books_dict.append(this_book_dict)
+        out_path = os.path.join(OUT_DIR, bible_name + ".json")
+        with open(out_path, 'w', encoding='utf-8') as f:
+            json.dump(out_dict, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
     main()
