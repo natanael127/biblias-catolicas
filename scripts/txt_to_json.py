@@ -17,13 +17,21 @@ ABBREVIATION = [
 def parse_chapter_content(chapter_path):
 
     chapter_content = None
-    input_encoding = 'utf-16-le'
+    input_encodings = ['utf-16-le', 'utf-8']
 
-    with open(chapter_path, 'r', encoding=input_encoding) as f:
-        try:
-            chapter_content = f.read()
-        except UnicodeDecodeError:
-            raise ValueError(f"Failed to decode file {chapter_path} with encoding: {input_encoding}")
+    for encoding in input_encodings:
+        with open(chapter_path, 'r', encoding=encoding) as f:
+            try:
+                chapter_content = f.read()
+            except UnicodeDecodeError:
+                pass
+
+    if chapter_content is None:
+        raise ValueError(f"Failed to decode file {chapter_path} with encodings {", ".join(input_encodings)}")
+    
+    output_encoding = 'utf-8'
+    with open(chapter_path, 'w', encoding=output_encoding) as f:
+        f.write(chapter_content)
 
     # Split the content into lines
     lines = chapter_content.splitlines()
