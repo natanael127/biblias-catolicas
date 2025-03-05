@@ -39,6 +39,8 @@ def parse_chapter_content(chapter_path):
         lines = [line for line in lines if re.match(r'^\d+', line)]
         # Remove numbers followed by dot and spaces in the beginning of the line
         lines = [re.sub(r'^\d+\.\s+', '', line) for line in lines]
+        # Remove any trailing spaces
+        lines = [line.rstrip() for line in lines]
         return lines
 
 def parse_book_name(raw_name):
