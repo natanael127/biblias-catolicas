@@ -28,7 +28,7 @@ def parse_chapter_content(chapter_path):
 
     if chapter_content is None:
         raise ValueError(f"Failed to decode file {chapter_path} with encodings {", ".join(input_encodings)}")
-    
+
     output_encoding = 'utf-8'
     with open(chapter_path, 'w', encoding=output_encoding) as f:
         f.write(chapter_content)
