@@ -3,6 +3,17 @@ import re
 import json
 import argparse
 
+ABBREVIATION = [
+    "Gn", "Ex", "Lv", "Nm", "Dt", "Js", "Jz", "Rt", "1Sm", "2Sm",
+    "1Rs", "2Rs", "1Cr", "2Cr", "Esd", "Ne", "Tb", "Jt", "Est",
+    "1Mc", "2Mc", "Jó", "Sl", "Pr", "Ecl", "Ct", "Sb", "Eclo", "Is",
+    "Jr", "Lm", "Br", "Ez", "Dn", "Os", "Jl", "Am", "Ab",
+    "Jn", "Mq", "Na", "Hab", "Sf", "Ag", "Zc", "Ml",
+    "Mt", "Mc", "Lc", "Jo", "At", "Rm", "1Cor", "2Cor", "Gl", "Ef",
+    "Fl", "Cl", "1Ts", "2Ts", "1Tm", "2Tm", "Tt", "Fm", "Hb", "Tg",
+    "1Pd", "2Pd", "1Jo", "2Jo", "3Jo", "Jd", "Ap"
+]
+
 def parse_chapter_content(chapter_path):
     # List of encodings to try
     encodings = ['iso-8859-1', 'utf-16-le', 'utf-8']
@@ -56,10 +67,14 @@ def main(txt_dir, json_dir):
         books_dict = bible_dict["books"]
         books_list = os.listdir(bible_path)
         books_list.sort()
-        for book_name in books_list:
+        for k, book_name in enumerate(books_list):
             book_parsed = parse_book_name(book_name)
-            this_book_dict = {"name": book_parsed, "chapters": []}
-            print(f"Parsing book {book_parsed} from bible {bible_name}")
+            this_book_dict = {
+                "name": book_parsed,
+                "abbreviation": ABBREVIATION[k],
+                "chapters": [],
+            }
+            print(f"Parsing book ({ABBREVIATION[k]}) {book_parsed} from bible {bible_name}")
             book_path = os.path.join(bible_path, book_name)
             chapters_list = os.listdir(book_path)
             chapters_list.sort()
