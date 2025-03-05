@@ -62,6 +62,7 @@ def main(txt_dir, json_dir):
     # Find bibles
     create_dir_if_not_exists(json_dir)
     bibles_list = os.listdir(txt_dir)
+    bibles_list = [bible for bible in bibles_list if os.path.isdir(os.path.join(txt_dir, bible))]
     bibles_list.sort()
     for bible_name in bibles_list:
         bible_path = os.path.join(txt_dir, bible_name)

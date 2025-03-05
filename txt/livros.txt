@@ -1,0 +1,73 @@
+Gn - Gênesis
+Ex - Êxodo
+Lv - Levítico
+Nm - Números
+Dt - Deuteronômio
+Js - Livro De Josué
+Jz - Livro Dos Juízes
+Rt - Rute
+1Sm - Primeiro Livro De Samuel
+2Sm - Segundo Livro De Samuel
+1Rs - Primeiro Livro Dos Reis
+2Rs - Segundo Livro Dos Reis
+1Cr - Primeiro Livro Das Crônicas
+2Cr - Segundo Livro Das Crônicas
+Esd - Esdras
+Ne - Neemias
+Tb - Tobias
+Jt - Judite
+Est - Ester
+1Mc - Primeiro Livro Dos Macabeus
+2Mc - Segundo Livro Dos Macabeus
+Jó - Jó
+Sl - Salmos
+Pr - Provérbios
+Ecl - Eclesiastes
+Ct - Cântico Dos Cânticos
+Sb - Sabedoria
+Eclo - Eclesiástico
+Is - Isaías
+Jr - Jeremias
+Lm - Lamentações
+Br - Baruc
+Ez - Ezequiel
+Dn - Daniel
+Os - Oséias
+Jl - Joel
+Am - Amós
+Ab - Abdias
+Jn - Jonas
+Mq - Miquéias
+Na - Naum
+Hab - Habacuc
+Sf - Sofonias
+Ag - Ageu
+Zc - Zacarias
+Ml - Malaquias
+Mt - Mateus
+Mc - Marcos
+Lc - Lucas
+Jo - João
+At - Atos Dos Apóstolos
+Rm - Carta Aos Romanos
+1Cor - Primeira Carta Aos Coríntios
+2Cor - Segunda Carta Aos Coríntios
+Gl - Carta Aos Gálatas
+Ef - Carta Aos Efésios
+Fl - Carta Aos Filipenses
+Cl - Carta Aos Colossenses
+1Ts - Primeira Carta Aos Tessalonicenses
+2Ts - Segunda Carta Aos Tessalonicenses
+1Tm - Primeira Carta A Timóteo
+2Tm - Segunda Carta A Timóteo
+Tt - Carta A Tito
+Fm - Carta A Filemon
+Hb - Carta Aos Hebreus
+Tg - Tiago
+1Pd - Primeira Pedro
+2Pd - Segunda Pedro
+1Jo - Primeira João
+2Jo - Segunda João
+3Jo - Terceira João
+Jd - Judas
+Ap - Apocalipse De São João
