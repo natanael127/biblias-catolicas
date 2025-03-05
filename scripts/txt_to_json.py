@@ -16,7 +16,7 @@ ABBREVIATION = [
 
 def parse_chapter_content(chapter_path):
     # List of encodings to try
-    encodings = ['iso-8859-1', 'utf-16-le', 'utf-8']
+    encodings = ['utf-16-le', 'iso-8859-1', 'utf-8']
 
     chapter_content = None
 
@@ -24,9 +24,10 @@ def parse_chapter_content(chapter_path):
         try:
             with open(chapter_path, 'r', encoding=encoding) as f:
                 chapter_content = f.read()
+                break
         except UnicodeDecodeError:
             # If this encoding didn't work, continue to the next one
-            continue
+            pass
     
     if chapter_content is None:
         raise ValueError(f"Failed to decode file {chapter_path} with encodings: {', '.join(encodings)}")
