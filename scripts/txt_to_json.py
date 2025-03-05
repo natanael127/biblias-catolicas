@@ -6,7 +6,7 @@ import argparse
 ABBREVIATION = [
     "Gn", "Ex", "Lv", "Nm", "Dt", "Js", "Jz", "Rt", "1Sm", "2Sm",
     "1Rs", "2Rs", "1Cr", "2Cr", "Esd", "Ne", "Tb", "Jt", "Est",
-    "1Mc", "2Mc", "Jó", "Sl", "Pr", "Ecl", "Ct", "Sb", "Eclo", "Is",
+    "Jó", "Sl", "1Mc", "2Mc", "Pr", "Ecl", "Ct", "Sb", "Eclo", "Is",
     "Jr", "Lm", "Br", "Ez", "Dn", "Os", "Jl", "Am", "Ab",
     "Jn", "Mq", "Na", "Hab", "Sf", "Ag", "Zc", "Ml",
     "Mt", "Mc", "Lc", "Jo", "At", "Rm", "1Cor", "2Cor", "Gl", "Ef",
