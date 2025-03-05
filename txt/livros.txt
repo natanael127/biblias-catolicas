@@ -70,4 +70,4 @@ Tg - Tiago
 2Jo - Segunda João
 3Jo - Terceira João
 Jd - Judas
-Ap - Apocalipse De São João
+Ap - Apocalipse
