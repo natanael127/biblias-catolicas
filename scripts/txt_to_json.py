@@ -15,34 +15,28 @@ ABBREVIATION = [
 ]
 
 def parse_chapter_content(chapter_path):
-    # List of encodings to try
-    encodings = ['utf-16-le', 'iso-8859-1', 'utf-8']
 
     chapter_content = None
+    input_encoding = 'utf-16-le'
 
-    for encoding in encodings:
+    with open(chapter_path, 'r', encoding=input_encoding) as f:
         try:
-            with open(chapter_path, 'r', encoding=encoding) as f:
-                chapter_content = f.read()
-                break
+            chapter_content = f.read()
         except UnicodeDecodeError:
-            # If this encoding didn't work, continue to the next one
-            pass
-    
-    if chapter_content is None:
-        raise ValueError(f"Failed to decode file {chapter_path} with encodings: {', '.join(encodings)}")
-    else:
-        # Split the content into lines
-        lines = chapter_content.splitlines()
-        # Remove empty lines
-        lines = [line for line in lines if line.strip()]
-        # Remove lines that does not start with a number
-        lines = [line for line in lines if re.match(r'^\d+', line)]
-        # Remove numbers followed by dot and spaces in the beginning of the line
-        lines = [re.sub(r'^\d+\.\s+', '', line) for line in lines]
-        # Remove any trailing spaces
-        lines = [line.rstrip() for line in lines]
-        return lines
+            raise ValueError(f"Failed to decode file {chapter_path} with encoding: {input_encoding}")
+
+    # Split the content into lines
+    lines = chapter_content.splitlines()
+    # Remove empty lines
+    lines = [line for line in lines if line.strip()]
+    # Remove lines that does not start with a number
+    lines = [line for line in lines if re.match(r'^\d+', line)]
+    # Remove numbers followed by dot and spaces in the beginning of the line
+    lines = [re.sub(r'^\d+\.\s+', '', line) for line in lines]
+    # Remove any trailing spaces
+    lines = [line.rstrip() for line in lines]
+
+    return lines
 
 def parse_book_name(raw_name):
     # Remove the number followed by spaces before the book name
