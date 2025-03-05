@@ -1,9 +1,7 @@
 import os
 import re
 import json
-
-TXT_DIR = "txt"
-OUT_DIR = "json"
+import argparse
 
 def parse_chapter_content(chapter_path):
     # List of encodings to try
@@ -44,13 +42,13 @@ def create_dir_if_not_exists(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def main():
+def main(txt_dir, json_dir):
     # Find bibles
-    create_dir_if_not_exists(OUT_DIR)
-    bibles_list = os.listdir(TXT_DIR)
+    create_dir_if_not_exists(json_dir)
+    bibles_list = os.listdir(txt_dir)
     bibles_list.sort()
     for bible_name in bibles_list:
-        bible_path = os.path.join(TXT_DIR, bible_name)
+        bible_path = os.path.join(txt_dir, bible_name)
         out_dict = {"bible": {}}
         bible_dict = out_dict["bible"]
         bible_dict["name"] = bible_name
@@ -70,9 +68,17 @@ def main():
                 verses_dict = parse_chapter_content(chapter_path)
                 this_book_dict["chapters"].append(verses_dict)
             books_dict.append(this_book_dict)
-        out_path = os.path.join(OUT_DIR, bible_name + ".json")
+        out_path = os.path.join(json_dir, bible_name + ".json")
         with open(out_path, 'w', encoding='utf-8') as f:
             json.dump(out_dict, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Convert Bible text files to JSON format')
+    parser.add_argument('--txt-dir', type=str, required=True,
+                        help='Directory containing the input text files')
+    parser.add_argument('--json-dir', type=str, required=True,
+                        help='Directory where JSON files will be saved')
+
+    args = parser.parse_args()
+
+    main(args.txt_dir, args.json_dir)
