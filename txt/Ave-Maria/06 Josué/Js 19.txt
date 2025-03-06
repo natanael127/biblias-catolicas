@@ -1,11 +1,11 @@
 ﻿Josué, 19
 1. A segunda sorte caiu a Simeão, à tribo dos filhos de Simeão, segundo as suas famílias. Sua parte estava situada no meio da de Judá.
-2. (2-7) Tiveram por herança: Bersabéia (Sabéia), Molada, Haser-Sual, Bala, Asen, Eltolad, Betul, Harma, Siceleg, Bet-Marcabot, Hasersura, Bet-Labaot e Saroen: treze cidades com suas aldeias. Ain, Remon, Atar e Asã: quatro cidades com suas aldeias,
-3. []
-4. []
-5. []
-6. []
-7. []
+2. Tiveram por herança: Bersabéia (Sabéia), Molada,
+3. Haser-Sual, Bala, Asen,
+4. Eltolad, Betul, Harma,
+5. Siceleg, Bet-Marcabot, Hasersura,
+6. Bet-Labaot e Saroen: treze cidades com suas aldeias.
+7. Ain, Remon, Atar e Asã: quatro cidades com suas aldeias,
 8. assim como todos os lugarejos dos arredores dessas cidades até Baalat-Beer, que é Rama do sul. Esta foi a parte dos filhos de Simeão, segundo suas famílias.
 9. Esta parte foi tomada da porção dos filhos de Judá, que era grande demais para eles e, por isso, os filhos de Simeão receberam a sua parte no meio de seu território.
 10. A terceira sorte coube aos filhos de Zabulon, segundo suas famílias, e a fronteira de sua parte estendia-se até Sarid.
@@ -15,13 +15,13 @@
 14. Dava volta em seguida pelo norte para Hanaton e terminava no vale de Jeftael.
 15. Havia ainda Catet, Naalol, Semeron, Jedala e Belém; doze cidades com suas aldeias.
 16. Tal foi a parte de Zabulon, segundo suas famílias, e tais são as suas cidades e suas aldeias.
-17. (17-23) A quarta sorte coube a Issacar, aos filhos de Issacar segundo suas famílias. Sua fronteira era Jezrael, Casalot, Suném, Hafaraim, Seon, Anaarat, Rabot, Cesion, Abés, Ramet, En-Ganim, En-Hada e Bet-Feses. A fronteira tocava em Tabor, Seesima e Bet-Sames indo terminar no Jordão: dezesseis cidades com suas aldeias. Tal foi a parte da tribo dos filhos de Issacar segundo suas famílias, e tais são suas cidades e suas aldeias.
-18. []
-19. []
-20. []
-21. []
-22. []
-23. []
+17. A quarta sorte coube a Issacar, aos filhos de Issacar segundo suas famílias.
+18. Sua fronteira era Jezrael, Casalot, Suném,
+19. Hafaraim, Seon, Anaarat,
+20. Rabot, Cesion, Abés,
+21. Ramet, En-Ganim, En-Hada e Bet-Feses.
+22. A fronteira tocava em Tabor, Seesima e Bet-Sames indo terminar no Jordão: dezesseis cidades com suas aldeias.
+23. Tal foi a parte da tribo dos filhos de Issacar segundo suas famílias, e tais são suas cidades e suas aldeias.
 24. A quinta sorte coube à tribo dos filhos de Aser, segundo suas famílias.
 25. Sua fronteira era Halcat, Cali, Beten, Axaf,
 26. Elmelec, Amaad e Messal; chegava pelo ocidente até o Carmelo e até Sior-Labanat.
@@ -33,21 +33,20 @@
 32. A sexta sorte caiu aos filhos de Neftali, segundo suas famílias.
 33. Sua fronteira partia de Helef, desde o carvalhal de Saananim, indo para Adami-Neceb e Jebnael, até Lecum, terminando no Jordão.
 34. Voltava depois pelo ocidente até Azanot-Tabor e atingia Hucuca. Ao sul, tocava em Zabulon, ao ocidente em Aser, ao oriente em Judá, perto do Jordão.
-35. (35-39) Suas fortalezas eram: Assedim, Ser, Emat, Recat, Ceneret, Edema, Arama, Asor, Cedes, Edrai, En-Hasor, Jeron, Magdalel, Horem, Bet-Anat e Bet-Sames: dezenove cidades com suas aldeias. Esta foi a parte da tribo dos filhos de Neftali, segundo suas famílias e tais são suas cidades e suas aldeias.
-36. []
-37. []
-38. []
-39. []
+35. Suas fortalezas eram: Assedim, Ser, Emat, Recat, Ceneret,
+36. Edema, Arama, Asor,
+37. Cedes, Edrai, En-Hasor,
+38. Jeron, Magdalel, Horem,
+39. Bet-Anat e Bet-Sames: dezenove cidades com suas aldeias. Esta foi a parte da tribo dos filhos de Neftali, segundo suas famílias e tais são suas cidades e suas aldeias.
 40. A sétima sorte caiu à tribo dos filhos de Dã, segundo suas famílias.
-41. (41-46) Sua fronteira compreendia Saraa, Estaol, Hir-Semes, Selebin, Ajalon, Jetela, Elon, Temna, Acron, Eltece, Gebeton, Balaat, Jud, Bene-Barac, Get-Remon, Me-Jarcon e Arecon com a terra fronteira a Jope.
-42. []
-43. []
-44. []
-45. []
-46. []
+41. Sua fronteira compreendia Saraa, Estaol, Hir-Semes,
+42. Selebin, Ajalon, Jetela,
+43. Elon, Temna, Acron,
+44. Eltece, Gebeton, Balaat,
+45. Jud, Bene-Barac, Get-Remon,
+46. Me-Jarcon e Arecon com a terra fronteira a Jope.
 47. O território dos danitas estendia-se para além dos seus limites, porque, tendo combatido Lesém, tomaram-na e passaram-na ao fio da espada. Entrando em sua posse, habitaram-na e deram-lhe o nome de Dã, seu pai.
 48. Tal foi a parte da tribo dos filhos de Dã, segundo suas famílias, e tais são as suas cidades e suas aldeias.
 49. Acabada a repartição da terra segundo seus limites, os israelitas deram a Josué, filho de Nun, uma parte no meio deles.
 50. Por ordem do Senhor, deram-lhe a cidade que ele pediu, Tamnat-Saré, na montanha de Efraim. Josué reedificou a cidade e habitou nela.
-
 51. Estas são as partes que o sacerdote Eleazar, Josué, filho de Nun, e os chefes de família das tribos dos israelitas repartiram por sorte em Silo, diante do Senhor, à entrada da tenda de reunião. E assim acabaram a divisão da terra.
