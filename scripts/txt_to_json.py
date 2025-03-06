@@ -31,14 +31,14 @@ def parse_chapter_content(chapter_path):
 
     # Split the content into lines
     lines = chapter_content.splitlines()
+    # Remove empty lines
+    lines = [line for line in lines if line.strip()]
 
     # Save back joining the lines and giving new line at the end
     output_encoding = 'utf-8'
     with open(chapter_path, 'w', encoding=output_encoding) as f:
         f.write('\n'.join(lines) + '\n')
 
-    # Remove empty lines
-    lines = [line for line in lines if line.strip()]
     # Remove lines that does not start with a number
     lines = [line for line in lines if re.match(r'^\d+', line)]
     # Remove numbers followed by dot and spaces in the beginning of the line
