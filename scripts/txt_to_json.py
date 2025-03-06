@@ -1,5 +1,6 @@
 import os
 import re
+import csv
 import json
 import argparse
 
@@ -60,9 +61,10 @@ def create_dir_if_not_exists(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def main(txt_dir, json_dir):
-    # Find bibles
+def main(txt_dir, json_dir, csv_dir):
+    # Convert to json
     create_dir_if_not_exists(json_dir)
+    bibles_data = []
     bibles_list = os.listdir(txt_dir)
     bibles_list = [bible for bible in bibles_list if os.path.isdir(os.path.join(txt_dir, bible))]
     bibles_list.sort()
@@ -91,9 +93,54 @@ def main(txt_dir, json_dir):
                 verses_dict = parse_chapter_content(chapter_path)
                 this_book_dict["chapters"].append(verses_dict)
             books_dict.append(this_book_dict)
+        bibles_data.append(out_dict)
         out_path = os.path.join(json_dir, bible_name + ".json")
         with open(out_path, 'w', encoding='utf-8') as f:
             json.dump(out_dict, f, ensure_ascii=False, indent=4)
+
+    bible_stats = []
+    for k, data in enumerate(bibles_data):
+        bible_stats.append({
+            "name": data["bible"]["name"],
+            "books": {}
+        })
+        for book in data["bible"]["books"]:
+            num_chapters = len(book["chapters"])
+            num_verses = sum(len(chapter) for chapter in book["chapters"])
+            bible_stats[k]["books"][book["abbreviation"]] = {
+                "num_chapters": num_chapters,
+                "num_verses": num_verses
+            }
+
+    # Save bible stats to CSV
+    # Header: Book, Bible 1 num chapters, Bible 1 num verses, Bible 2 num chapters, Bible 2 num verses...
+    if csv_dir:
+        create_dir_if_not_exists(csv_dir)
+        csv_path = os.path.join(csv_dir, "bible_stats.csv")
+        with open(csv_path, 'w', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            header = ["Book"]
+            for k in range(len(bibles_data)):
+                header.append(f"Bible {k + 1} num chapters")
+                header.append(f"Bible {k + 1} num verses")
+            writer.writerow(header)
+
+            # Get all unique book abbreviations
+            all_books = set()
+            for bible in bible_stats:
+                all_books.update(bible["books"].keys())
+
+            # Write rows for each book
+            for book_abbr in sorted(all_books):
+                row = [book_abbr]
+                for bible in bible_stats:
+                    if book_abbr in bible["books"]:
+                        row.append(bible["books"][book_abbr]["num_chapters"])
+                        row.append(bible["books"][book_abbr]["num_verses"])
+                    else:
+                        row.append("")
+                        row.append("")
+                writer.writerow(row)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert Bible text files to JSON format')
@@ -101,7 +148,9 @@ if __name__ == "__main__":
                         help='Directory containing the input text files')
     parser.add_argument('--json-dir', type=str, required=True,
                         help='Directory where JSON files will be saved')
+    parser.add_argument('--csv-dir', type=str, required=False,
+                        help='Directory where CSV files will be saved')
 
     args = parser.parse_args()
 
-    main(args.txt_dir, args.json_dir)
+    main(args.txt_dir, args.json_dir, args.csv_dir)
