@@ -125,13 +125,8 @@ def main(txt_dir, json_dir, csv_dir):
                 header.append(f"Bible {k + 1} num verses")
             writer.writerow(header)
 
-            # Get all unique book abbreviations
-            all_books = set()
-            for bible in bible_stats:
-                all_books.update(bible["books"].keys())
-
             # Write rows for each book
-            for book_abbr in sorted(all_books):
+            for book_abbr in ABBREVIATION:
                 row = [book_abbr]
                 for bible in bible_stats:
                     if book_abbr in bible["books"]:
