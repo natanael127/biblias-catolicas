@@ -28,7 +28,7 @@ def parse_chapter_content(chapter_path):
                 pass
 
     if chapter_content is None:
-        raise ValueError(f"Failed to decode file {chapter_path} with encodings {", ".join(input_encodings)}")
+        raise ValueError(f"Failed to decode file {chapter_path} with encodings {', '.join(input_encodings)}")
 
     # Split the content into lines
     lines = chapter_content.splitlines()
