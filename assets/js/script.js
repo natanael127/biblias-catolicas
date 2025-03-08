@@ -283,11 +283,7 @@ async function fetchRepositoryInfo() {
                 const repoPath = metaTag.getAttribute('content');
                 [username, repoName] = repoPath.split('/');
             } else {
-                // Se não encontrado, tentar deduzir da URL atual
-                const path = window.location.pathname;
-                const pathParts = path.split('/').filter(part => part);
-                repoName = pathParts[pathParts.length - 1] || 'open-bible';
-                username = urlParts[0] || 'usuário-github';
+                throw new Error('Não foi possível ler o remote do repositório git.');
             }
         }
 
