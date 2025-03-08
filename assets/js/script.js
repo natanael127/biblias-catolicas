@@ -309,6 +309,20 @@ async function searchVerse() {
     }
 }
 
+// Função de debounce para limitar a frequência de chamadas
+function debounce(func, timeout = 500) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+// Versão com debounce da função searchVerse
+const debouncedSearchVerse = debounce(() => {
+    searchVerse();
+});
+
 // Adicionar evento de clique ao botão
 document.getElementById('search').addEventListener('click', searchVerse);
 
@@ -318,6 +332,9 @@ document.getElementById('reference').addEventListener('keypress', (event) => {
         searchVerse();
     }
 });
+
+// Novo: Adicionar evento de input para busca automática enquanto digita
+document.getElementById('reference').addEventListener('input', debouncedSearchVerse);
 
 // Função para copiar o texto bíblico para o clipboard
 document.getElementById('copy-button').addEventListener('click', function() {

@@ -253,6 +253,16 @@ button:hover {
     padding: 0 10px;
 }
 
+/* Ocultar o botão de busca já que agora a busca é automática */
+#search {
+    display: none;
+}
+
+/* Ajuste para a caixa de busca ocupar todo o espaço disponível */
+.search-box input {
+    width: 100%;
+}
+
 /* Media queries para responsividade */
 @media (max-width: 768px) {
     body {
