@@ -175,18 +175,17 @@ button:hover {
     clear: both; /* Garante que esteja abaixo de todos os elementos flutuantes */
 }
 
-.about-footer a {
-    color: #1565c0;
-    text-decoration: none;
-}
-
-.about-footer a:hover {
-    text-decoration: underline;
+.about-footer .container {
+    gap: 1px; /* Reduz o espaço entre elementos no container do footer */
 }
 
 /* Estilização para seção de suporte */
 .support-section {
-    margin-bottom: 10px;
+    margin-bottom: 2px; /* Reduzido de 10px para 5px */
+}
+
+.repo-info {
+    margin-top: 0; /* Remove qualquer margem superior */
 }
 
 /* Media queries para responsividade */
