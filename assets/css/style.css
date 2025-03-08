@@ -8,23 +8,6 @@ body {
     flex-direction: row;
     flex-wrap: wrap; /* Permite quebra de linha para elementos flex */
 }
-.sidebar {
-    width: 200px;
-    padding: 15px;
-    background-color: #f5f5f5;
-    border-right: 1px solid #ddd;
-    margin-right: 20px;
-    border-radius: 4px;
-    min-height: 300px;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-    position: sticky;
-    top: 20px;
-    display: none; /* Inicialmente oculto */
-}
-.sidebar.visible {
-    display: block;
-}
 .book-list {
     display: flex;
     flex-wrap: wrap;
@@ -166,7 +149,7 @@ button:hover {
     text-align: center;
     font-size: 14px;
     color: #666;
-    order: 3; /* Garante que apareça depois do sidebar e main-content */
+    order: 3; /* Coloca o footer no final */
     clear: both; /* Garante que esteja abaixo de todos os elementos flutuantes */
 }
 
@@ -287,15 +270,6 @@ button:hover {
 @media (max-width: 768px) {
     body {
         flex-direction: column;
-    }
-    .sidebar {
-        width: auto;
-        margin-right: 0;
-        margin-bottom: 20px;
-        max-height: none;
-        padding: 10px;
-        position: relative;
-        top: 0;
     }
     .book-item {
         min-width: 28px;

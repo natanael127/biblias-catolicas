@@ -195,14 +195,12 @@ document.getElementById('bible-file').addEventListener('change', async function(
     await loadBibleFromFile(this.files[0], uploadStatus);
 });
 
-// Função para preencher a barra lateral com os livros da Bíblia
 function populateBooksSidebar(books) {
     const bookList = document.getElementById('book-list');
-    const sidebar = document.getElementById('sidebar');
-    
+
     // Limpar lista atual
     bookList.innerHTML = '';
-    
+
     // Adicionar cada livro à lista
     books.forEach(book => {
         const bookElement = document.createElement('div');
@@ -218,9 +216,6 @@ function populateBooksSidebar(books) {
         
         bookList.appendChild(bookElement);
     });
-    
-    // Tornar a barra lateral visível
-    sidebar.classList.add('visible');
 }
 
 // Função para analisar referências complexas
