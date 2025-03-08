@@ -307,21 +307,61 @@ async function fetchRepositoryInfo() {
             throw new Error('Repositório não encontrado.');
         }
 
-        // Buscar informações do commit mais recente
-        const commitsUrl = `${apiUrl}/commits?per_page=1`;
+        // Buscar informações do commit mais recente da branch master
+        const commitsUrl = `${apiUrl}/commits?sha=master&per_page=1`;
         const commitsResponse = await fetch(commitsUrl);
         const commits = await commitsResponse.json();
         
+        if (commits.length === 0) {
+            throw new Error('Não foi possível obter o último commit da branch master.');
+        }
+        
+        const latestCommitSha = commits[0].sha;
+        
         // Buscar tags (versões)
-        const tagsUrl = `${apiUrl}/tags?per_page=1`;
+        const tagsUrl = `${apiUrl}/tags?per_page=10`;
         const tagsResponse = await fetch(tagsUrl);
-        const tags = await tagsResponse.json();
+        const allTags = await tagsResponse.json();
+        
+        // Verificar se alguma tag aponta para o último commit da master
+        let matchingTag = null;
+        
+        // Verificar cada tag para ver se aponta para o último commit da master
+        for (const tag of allTags) {
+            // Buscar detalhes da tag para obter o SHA do commit
+            const tagCommitUrl = `${apiUrl}/git/refs/tags/${tag.name}`;
+            try {
+                const tagResponse = await fetch(tagCommitUrl);
+                const tagData = await tagResponse.json();
+                
+                // Verificar se a tag é uma tag anotada (object.type === 'tag') ou uma tag leve
+                if (tagData.object && tagData.object.type === 'tag') {
+                    // Para tags anotadas, precisamos obter o commit relacionado
+                    const tagObjUrl = tagData.object.url;
+                    const tagObjResponse = await fetch(tagObjUrl);
+                    const tagObj = await tagObjResponse.json();
+                    
+                    if (tagObj.object && tagObj.object.sha === latestCommitSha) {
+                        matchingTag = tag;
+                        break;
+                    }
+                } else if (tagData.object && tagData.object.sha === latestCommitSha) {
+                    // Tag leve, verificamos diretamente o SHA
+                    matchingTag = tag;
+                    break;
+                }
+            } catch (error) {
+                console.error(`Erro ao verificar a tag ${tag.name}:`, error);
+                continue; // Continuar verificando outras tags
+            }
+        }
         
         // Montar informação para exibição
-        let infoHtml = `<a href="${repoData.html_url}" target="_blank">${repoData.full_name}</a> - `;
+        let infoHtml = `<a href="${repoData.html_url}/tree/master" target="_blank">${repoData.full_name}</a> (branch: master) - `;
         
-        if (tags.length > 0) {
-            infoHtml += `Versão: <strong>${tags[0].name}</strong>, `;
+        // Só mostrar a tag se ela corresponder ao último commit
+        if (matchingTag) {
+            infoHtml += `Versão: <strong>${matchingTag.name}</strong>, `;
         }
         
         if (commits.length > 0) {
@@ -330,7 +370,8 @@ async function fetchRepositoryInfo() {
             infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
         }
         
-        footerContainer.innerHTML = `<p>${infoHtml}</p>` + footerContainer.innerHTML;
+        const currentHTML = footerContainer.innerHTML;
+        footerContainer.innerHTML = `<p>${infoHtml}</p>` + currentHTML;
         
     } catch (error) {
         console.error('Erro ao buscar informações do repositório:', error);
