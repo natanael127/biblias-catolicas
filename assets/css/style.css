@@ -160,6 +160,25 @@ button:hover {
     background-color: #4CAF50;
 }
 
+/* Estilos para o rodapé */
+.repo-footer {
+    margin-top: 40px;
+    padding: 15px 0;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.repo-footer a {
+    color: #1565c0;
+    text-decoration: none;
+}
+
+.repo-footer a:hover {
+    text-decoration: underline;
+}
+
 /* Media queries para responsividade */
 @media (max-width: 768px) {
     body {

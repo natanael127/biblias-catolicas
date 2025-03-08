@@ -260,3 +260,87 @@ document.getElementById('copy-button').addEventListener('click', function() {
         });
     }
 });
+
+// Função para buscar informações do repositório GitHub
+async function fetchRepositoryInfo() {
+    const footer = document.getElementById('repo-footer');
+    const footerContainer = footer.querySelector('.container');
+    
+    try {
+        // Obter o nome do usuário e do repositório da URL atual
+        const urlParts = window.location.hostname.split('.');
+        let username, repoName;
+        
+        if (window.location.hostname.includes('github.io')) {
+            // Formato: username.github.io/repo-name
+            username = urlParts[0];
+            repoName = window.location.pathname.split('/')[1];
+        } else {
+            // URL customizada ou ambiente local - usar valores padrão
+            // Extrair do "origin" do git se possível
+            const metaTag = document.querySelector('meta[name="github-repo"]');
+            if (metaTag) {
+                const repoPath = metaTag.getAttribute('content');
+                [username, repoName] = repoPath.split('/');
+            } else {
+                // Se não encontrado, tentar deduzir da URL atual
+                const path = window.location.pathname;
+                const pathParts = path.split('/').filter(part => part);
+                repoName = pathParts[pathParts.length - 1] || 'open-bible';
+                username = urlParts[0] || 'usuário-github';
+            }
+        }
+
+        // Se estiver rodando localmente, usar um valor padrão
+        if (window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1') {
+            const pathSegments = window.location.pathname.split('/');
+            repoName = pathSegments.find(s => s.length > 0 && s !== 'index.html') || 'open-bible';
+        }
+
+        if (!username || !repoName) {
+            throw new Error('Não foi possível determinar o repositório GitHub.');
+        }
+
+        // Buscar informações do repositório via API GitHub
+        const apiUrl = `https://api.github.com/repos/${username}/${repoName}`;
+        const repoResponse = await fetch(apiUrl);
+        const repoData = await repoResponse.json();
+        
+        if (repoData.message === 'Not Found') {
+            throw new Error('Repositório não encontrado.');
+        }
+
+        // Buscar informações do commit mais recente
+        const commitsUrl = `${apiUrl}/commits?per_page=1`;
+        const commitsResponse = await fetch(commitsUrl);
+        const commits = await commitsResponse.json();
+        
+        // Buscar tags (versões)
+        const tagsUrl = `${apiUrl}/tags?per_page=1`;
+        const tagsResponse = await fetch(tagsUrl);
+        const tags = await tagsResponse.json();
+        
+        // Montar informação para exibição
+        let infoHtml = `<a href="${repoData.html_url}" target="_blank">${repoData.full_name}</a> - `;
+        
+        if (tags.length > 0) {
+            infoHtml += `Versão: <strong>${tags[0].name}</strong>, `;
+        }
+        
+        if (commits.length > 0) {
+            const commitDate = new Date(commits[0].commit.author.date);
+            const formattedDate = commitDate.toLocaleDateString();
+            infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
+        }
+        
+        footerContainer.innerHTML = `<p>${infoHtml}</p>`;
+        
+    } catch (error) {
+        console.error('Erro ao buscar informações do repositório:', error);
+        footerContainer.innerHTML = `<p>Seletor de Versículos Bíblicos</p>`;
+    }
+}
+
+// Executar a função quando o documento estiver carregado
+document.addEventListener('DOMContentLoaded', fetchRepositoryInfo);
