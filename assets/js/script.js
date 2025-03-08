@@ -1,15 +1,24 @@
 // Variável para armazenar a Bíblia carregada
 let bibleData = null;
 
+// Nova função para obter parâmetros da URL
+function getUrlParameter(name) {
+    const searchParams = new URLSearchParams(window.location.search);
+    return searchParams.get(name);
+}
+
 // Função para verificar dinamicamente as Bíblias disponíveis
 async function loadAvailableBibles() {
     try {
+        // Obtém o parâmetro 'bible' da URL
+        const bibleParam = getUrlParameter('bible');
+        
         // Tenta carregar o índice de Bíblias disponíveis
         const response = await fetch('assets/data/bibles/index.json');
         
         if (response.ok) {
             const biblesList = await response.json();
-            populateBiblesSelect(biblesList);
+            populateBiblesSelect(biblesList, bibleParam);
         } else {
             console.error('Arquivo index.json não encontrado. Nenhuma Bíblia disponível para carregar.');
             // Mantém o select com apenas a opção padrão
@@ -20,7 +29,7 @@ async function loadAvailableBibles() {
 }
 
 // Função para preencher o select com as Bíblias disponíveis
-function populateBiblesSelect(biblesList) {
+function populateBiblesSelect(biblesList, defaultBibleId = null) {
     const selectElement = document.getElementById('bible-select');
     
     // Limpar opções existentes, exceto a primeira (placeholder)
@@ -42,8 +51,24 @@ function populateBiblesSelect(biblesList) {
     uploadOption.textContent = "Fazer upload...";
     selectElement.appendChild(uploadOption);
 
-    // Selecionar automaticamente a primeira tradução disponível
-    if (selectElement.options.length > 0) {
+    // Verificar se a Bíblia especificada na URL está disponível
+    let bibleSelected = false;
+    if (defaultBibleId) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value.toLowerCase() === defaultBibleId.toLowerCase()) {
+                selectElement.selectedIndex = i;
+                bibleSelected = true;
+                
+                // Acionar o evento change manualmente para carregar a Bíblia selecionada
+                const changeEvent = new Event('change');
+                selectElement.dispatchEvent(changeEvent);
+                break;
+            }
+        }
+    }
+    
+    // Se nenhuma Bíblia específica foi selecionada, usar a primeira
+    if (!bibleSelected && selectElement.options.length > 0) {
         selectElement.selectedIndex = 0;
         
         // Acionar o evento change manualmente para carregar a Bíblia selecionada
