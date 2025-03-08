@@ -53,28 +53,18 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
 
     // Verificar se a Bíblia especificada na URL está disponível
     let bibleSelected = false;
+    selectElement.selectedIndex = 0;
     if (defaultBibleId) {
         for (let i = 0; i < selectElement.options.length; i++) {
             if (selectElement.options[i].value.toLowerCase() === defaultBibleId.toLowerCase()) {
                 selectElement.selectedIndex = i;
                 bibleSelected = true;
-                
-                // Acionar o evento change manualmente para carregar a Bíblia selecionada
-                const changeEvent = new Event('change');
-                selectElement.dispatchEvent(changeEvent);
-                break;
             }
         }
     }
     
-    // Se nenhuma Bíblia específica foi selecionada, usar a primeira
-    if (!bibleSelected && selectElement.options.length > 0) {
-        selectElement.selectedIndex = 0;
-        
-        // Acionar o evento change manualmente para carregar a Bíblia selecionada
-        const changeEvent = new Event('change');
-        selectElement.dispatchEvent(changeEvent);
-    }
+    const changeEvent = new Event('change');
+    selectElement.dispatchEvent(changeEvent);
 }
 
 // Carregar Bíblias disponíveis quando o documento estiver carregado
