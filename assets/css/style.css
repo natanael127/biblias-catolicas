@@ -162,7 +162,7 @@ button:hover {
 }
 
 /* Estilos para o rodapé */
-.repo-footer {
+.about-footer {
     width: 100%; /* Ocupa toda a largura */
     flex-basis: 100%; /* Força uma quebra de linha antes do footer */
     margin-top: 40px;
@@ -172,15 +172,21 @@ button:hover {
     font-size: 14px;
     color: #666;
     order: 3; /* Garante que apareça depois do sidebar e main-content */
+    clear: both; /* Garante que esteja abaixo de todos os elementos flutuantes */
 }
 
-.repo-footer a {
+.about-footer a {
     color: #1565c0;
     text-decoration: none;
 }
 
-.repo-footer a:hover {
+.about-footer a:hover {
     text-decoration: underline;
+}
+
+/* Estilização para seção de suporte */
+.support-section {
+    margin-bottom: 10px;
 }
 
 /* Media queries para responsividade */
