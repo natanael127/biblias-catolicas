@@ -14,6 +14,7 @@
             padding: 20px;
             line-height: 1.6;
             display: flex;
+            flex-direction: row;
         }
         .sidebar {
             width: 200px;
@@ -32,11 +33,6 @@
         .sidebar.visible {
             display: block;
         }
-        .sidebar h3 {
-            margin-top: 0;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }
         .book-list {
             display: flex;
             flex-wrap: wrap;
@@ -50,6 +46,8 @@
             cursor: pointer;
             border: 1px solid #cce0f5;
             transition: background-color 0.2s;
+            min-width: 30px;
+            text-align: center;
         }
         .book-item:hover {
             background-color: #d0e5f7;
@@ -170,11 +168,33 @@
         .copy-button.success {
             background-color: #4CAF50;
         }
+        
+        /* Media queries para responsividade */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: auto;
+                margin-right: 0;
+                margin-bottom: 20px;
+                max-height: none;
+                padding: 10px;
+                position: relative;
+                top: 0;
+            }
+            .book-item {
+                min-width: 28px;
+                font-size: 12px;
+            }
+            .book-list {
+                gap: 6px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="sidebar" class="sidebar">
-        <h3>Livros Disponíveis</h3>
         <div id="book-list" class="book-list"></div>
     </div>
 
