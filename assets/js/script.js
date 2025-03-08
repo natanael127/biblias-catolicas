@@ -191,13 +191,7 @@ document.getElementById('bible-select').addEventListener('change', async functio
 document.getElementById('upload-button').addEventListener('click', async function() {
     const fileInput = document.getElementById('bible-file');
     const uploadStatus = document.getElementById('upload-status');
-    
-    // Resetar seleção da combobox
-    document.getElementById('bible-select').selectedIndex = 0;
-    
-    // Remover seleção de qualquer Bíblia predefinida
-    document.querySelectorAll('.bible-option').forEach(btn => btn.classList.remove('selected'));
-    
+
     await loadBibleFromFile(fileInput.files[0], uploadStatus);
 });
 
