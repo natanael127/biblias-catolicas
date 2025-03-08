@@ -35,6 +35,15 @@ function populateBiblesSelect(biblesList) {
         option.textContent = bible.name;
         selectElement.appendChild(option);
     });
+
+    // Selecionar automaticamente a primeira tradução disponível
+    if (selectElement.options.length > 1) {
+        selectElement.selectedIndex = 1; // Seleciona a primeira opção após o placeholder
+        
+        // Acionar o evento change manualmente para carregar a Bíblia selecionada
+        const changeEvent = new Event('change');
+        selectElement.dispatchEvent(changeEvent);
+    }
 }
 
 // Carregar Bíblias disponíveis quando o documento estiver carregado
