@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seletor de Versículos Bíblicos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+        }
+        .error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .reference {
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+        .verse {
+            font-size: 18px;
+        }
+        .upload-section {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .file-input-container {
+            margin-top: 10px;
+        }
+        .file-input-container input[type="file"] {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seletor de Versículos Bíblicos</h1>
+        
+        <div class="upload-section">
+            <h2>Carregar a Bíblia</h2>
+            <p>Por questões de segurança, você deve fazer o upload do arquivo JSON da Bíblia:</p>
+            <div class="file-input-container">
+                <input type="file" id="bible-file" accept=".json">
+                <button id="upload-button">Carregar Bíblia</button>
+            </div>
+            <div id="upload-status"></div>
+        </div>
+        
+        <p>Digite a referência no formato "Livro capítulo,versículo" (exemplo: "Gn 30,4" para Gênesis capítulo 30, versículo 4)</p>
+        
+        <div class="search-box">
+            <input type="text" id="reference" placeholder="Ex: Gn 30,4">
+            <button id="search">Buscar</button>
+        </div>
+        
+        <div class="result" id="result">
+            O resultado aparecerá aqui.
+        </div>
+    </div>
+
+    <script>
+        // Variável para armazenar a Bíblia carregada
+        let bibleData = null;
+
+        // Função para fazer upload do arquivo JSON
+        document.getElementById('upload-button').addEventListener('click', async function() {
+            const fileInput = document.getElementById('bible-file');
+            const uploadStatus = document.getElementById('upload-status');
+            
+            if (fileInput.files.length === 0) {
+                uploadStatus.innerHTML = '<span class="error">Nenhum arquivo selecionado.</span>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+                uploadStatus.innerHTML = '<span class="error">Por favor, selecione um arquivo JSON válido.</span>';
+                return;
+            }
+            
+            try {
+                const fileReader = new FileReader();
+                
+                fileReader.onload = function(event) {
+                    try {
+                        bibleData = JSON.parse(event.target.result);
+                        if (bibleData && bibleData.bible && bibleData.bible.books) {
+                            uploadStatus.innerHTML = `<span class="success">Bíblia carregada com sucesso: ${bibleData.bible.name}. ${bibleData.bible.books.length} livros disponíveis.</span>`;
+                        } else {
+                            uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
+                            bibleData = null;
+                        }
+                    } catch (parseError) {
+                        console.error('Erro ao processar JSON:', parseError);
+                        uploadStatus.innerHTML = '<span class="error">O arquivo não contém um JSON válido.</span>';
+                        bibleData = null;
+                    }
+                };
+                
+                fileReader.onerror = function() {
+                    uploadStatus.innerHTML = '<span class="error">Erro ao ler o arquivo.</span>';
+                };
+                
+                fileReader.readAsText(file);
+            } catch (error) {
+                console.error('Erro ao processar o arquivo:', error);
+                uploadStatus.innerHTML = '<span class="error">Erro ao processar o arquivo.</span>';
+            }
+        });
+
+        // Função para buscar o versículo
+        async function searchVerse() {
+            const reference = document.getElementById('reference').value.trim();
+            const resultElement = document.getElementById('result');
+            
+            // Verificar se a Bíblia foi carregada
+            if (!bibleData) {
+                resultElement.innerHTML = '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>';
+                return;
+            }
+            
+            // Validar entrada
+            const regex = /^([A-Za-z0-9]+)\s+(\d+),(\d+)$/;
+            const match = reference.match(regex);
+            
+            if (!match) {
+                resultElement.innerHTML = '<span class="error">Formato inválido. Use o formato "Livro capítulo,versículo" (exemplo: "Gn 30,4")</span>';
+                return;
+            }
+            
+            const [, bookAbbr, chapter, verse] = match;
+            
+            // Encontrar o livro
+            const book = bibleData.bible.books.find(b => 
+                b.abbreviation.toLowerCase() === bookAbbr.toLowerCase() || 
+                b.name.toLowerCase().startsWith(bookAbbr.toLowerCase())
+            );
+            
+            if (!book) {
+                resultElement.innerHTML = `<span class="error">Livro "${bookAbbr}" não encontrado.</span>`;
+                return;
+            }
+            
+            // Verificar se o capítulo existe
+            const chapterIndex = parseInt(chapter) - 1;
+            if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
+                resultElement.innerHTML = `<span class="error">Capítulo ${chapter} não encontrado em ${book.name}.</span>`;
+                return;
+            }
+            
+            // Verificar se o versículo existe
+            const verseIndex = parseInt(verse) - 1;
+            if (verseIndex < 0 || verseIndex >= book.chapters[chapterIndex].length) {
+                resultElement.innerHTML = `<span class="error">Versículo ${verse} não encontrado em ${book.name} ${chapter}.</span>`;
+                return;
+            }
+            
+            // Exibir o versículo
+            const verseText = book.chapters[chapterIndex][verseIndex];
+            resultElement.innerHTML = `
+                <div class="reference">${book.name} ${chapter},${verse}</div>
+                <div class="verse">${verseText}</div>
+            `;
+        }
+
+        // Adicionar evento de clique ao botão
+        document.getElementById('search').addEventListener('click', searchVerse);
+        
+        // Adicionar evento de tecla Enter no campo de entrada
+        document.getElementById('reference').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                searchVerse();
+            }
+        });
+    </script>
+</body>
+</html>
