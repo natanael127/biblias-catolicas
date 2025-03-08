@@ -6,6 +6,7 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap; /* Permite quebra de linha para elementos flex */
 }
 .sidebar {
     width: 200px;
@@ -162,12 +163,15 @@ button:hover {
 
 /* Estilos para o rodapé */
 .repo-footer {
+    width: 100%; /* Ocupa toda a largura */
+    flex-basis: 100%; /* Força uma quebra de linha antes do footer */
     margin-top: 40px;
     padding: 15px 0;
     border-top: 1px solid #ddd;
     text-align: center;
     font-size: 14px;
     color: #666;
+    order: 3; /* Garante que apareça depois do sidebar e main-content */
 }
 
 .repo-footer a {
