@@ -77,6 +77,17 @@ function updateUploadContainerVisibility() {
     }
 }
 
+// Nova função para gerar mensagem de sucesso quando uma Bíblia é carregada
+function getBibleLoadSuccessMessage(bibleData, includeBookCount = false) {
+    let message = `Bíblia ${bibleData.bible.name} carregada com sucesso`;
+    
+    if (includeBookCount && bibleData.bible.books) {
+        message += `. ${bibleData.bible.books.length} livros disponíveis`;
+    }
+    
+    return `<span class="success">${message}.</span>`;
+}
+
 // Função para carregar Bíblias predefinidas
 document.getElementById('bible-select').addEventListener('change', async function() {
     const bibleName = this.value;
@@ -105,7 +116,7 @@ document.getElementById('bible-select').addEventListener('change', async functio
         
         if (data && data.bible && data.bible.books) {
             bibleData = data;
-            uploadStatus.innerHTML = `<span class="success">Bíblia carregada com sucesso: ${bibleData.bible.name}. ${bibleData.bible.books.length} livros disponíveis.</span>`;
+            uploadStatus.innerHTML = getBibleLoadSuccessMessage(bibleData);
             
             // Preencher e mostrar a barra lateral com os livros disponíveis
             populateBooksSidebar(bibleData.bible.books);
@@ -154,7 +165,7 @@ document.getElementById('upload-button').addEventListener('click', async functio
             try {
                 bibleData = JSON.parse(event.target.result);
                 if (bibleData && bibleData.bible && bibleData.bible.books) {
-                    uploadStatus.innerHTML = `<span class="success">Bíblia carregada com sucesso: ${bibleData.bible.name}. ${bibleData.bible.books.length} livros disponíveis.</span>`;
+                    uploadStatus.innerHTML = getBibleLoadSuccessMessage(bibleData);
                     
                     // Preencher e mostrar a barra lateral com os livros disponíveis
                     populateBooksSidebar(bibleData.bible.books);
