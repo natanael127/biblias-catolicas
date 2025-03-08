@@ -369,7 +369,7 @@ async function fetchRepositoryInfo() {
             infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
         }
         
-        repoInfoDiv.innerHTML = `<p>${infoHtml}</p>`;
+        repoInfoDiv.innerHTML = `${infoHtml}`;
         
     } catch (error) {
         console.error('Erro ao buscar informações do repositório:', error);
