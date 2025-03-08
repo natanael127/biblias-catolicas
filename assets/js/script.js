@@ -43,8 +43,8 @@ function populateBiblesSelect(biblesList) {
     selectElement.appendChild(uploadOption);
 
     // Selecionar automaticamente a primeira tradução disponível
-    if (selectElement.options.length > 1) {
-        selectElement.selectedIndex = 1; // Seleciona a primeira opção após o placeholder
+    if (selectElement.options.length > 0) {
+        selectElement.selectedIndex = 0;
         
         // Acionar o evento change manualmente para carregar a Bíblia selecionada
         const changeEvent = new Event('change');
