@@ -104,7 +104,7 @@
         
         <div class="upload-section">
             <h2>Carregar a Bíblia</h2>
-            <p>Por questões de segurança, você deve fazer o upload do arquivo JSON da Bíblia:</p>
+            <p>Faça o upload do arquivo JSON da Bíblia</p>
             <div class="file-input-container">
                 <input type="file" id="bible-file" accept=".json">
                 <button id="upload-button">Carregar Bíblia</button>
@@ -112,10 +112,19 @@
             <div id="upload-status"></div>
         </div>
         
-        <p>Digite a referência no formato "Livro capítulo,versículo" (exemplo: "Gn 30,4" para Gênesis capítulo 30, versículo 4)</p>
+        <div class="format-instructions">
+            <h3>Como usar:</h3>
+            <p>Digite a referência bíblica em um dos seguintes formatos:</p>
+            <ul>
+                <li><strong>Livro capítulo</strong> - Mostra o capítulo completo (ex: <code>Gn 30</code> para mostrar Gênesis capítulo 30 inteiro)</li>
+                <li><strong>Livro capítulo,versículo</strong> - Mostra um versículo específico (ex: <code>Gn 30,5</code> para Gênesis capítulo 30, versículo 5)</li>
+                <li><strong>Livro capítulo,início-fim</strong> - Mostra um intervalo de versículos (ex: <code>Gn 30,5-7</code> para Gênesis capítulo 30, versículos 5 a 7)</li>
+                <li><strong>Livro capítulo,versículos combinados</strong> - Use ponto para separar versículos ou intervalos não consecutivos (ex: <code>Gn 30,5-7.15.20-25</code> para Gênesis capítulo 30, versículos de 5 a 7, mais o versículo 15, mais os versículos de 20 a 25)</li>
+            </ul>
+        </div>
         
         <div class="search-box">
-            <input type="text" id="reference" placeholder="Ex: Gn 30,4">
+            <input type="text" id="reference" placeholder="Ex: Gn 30,5-7.15.20-25">
             <button id="search">Buscar</button>
         </div>
         
@@ -261,7 +270,7 @@
             }
             
             // Preparar o HTML para exibir os versículos
-            let resultHTML = `<div class="reference">${book.name} ${parsedRef.chapter}</div>`;
+            let resultHTML = `<div class="reference">${book.name}</div>`;
             
             // Capítulo inteiro
             if (parsedRef.verses === 'all') {
