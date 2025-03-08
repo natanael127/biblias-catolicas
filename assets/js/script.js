@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAvailableBibles();
     fetchRepositoryInfo();
     updateUploadContainerVisibility();
-    setupExpandableSection(); // Nova função para configurar a seção expansível
-    
+    setupExpandableSections();
+
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', function() {
         updateUploadContainerVisibility();
@@ -536,21 +536,24 @@ async function fetchRepositoryInfo() {
 // Executar a função quando o documento estiver carregado
 document.addEventListener('DOMContentLoaded', fetchRepositoryInfo);
 
-// Função para configurar a seção expansível "Como usar"
-function setupExpandableSection() {
-    const header = document.querySelector('.expandable-header');
-    const content = document.querySelector('.expandable-content');
-    const formatInstructions = document.querySelector('.format-instructions');
+// Função para configurar as seções expansíveis
+function setupExpandableSections() {
+    const expandableSections = document.querySelectorAll('.expandable-section');
     
-    if (header && content) {
-        // Iniciar com a seção colapsada
-        content.classList.remove('expanded');
-        formatInstructions.classList.remove('expanded');
+    expandableSections.forEach(section => {
+        const header = section.querySelector('.expandable-header');
+        const content = section.querySelector('.expandable-content');
         
-        // Adicionar evento de clique
-        header.addEventListener('click', function() {
-            content.classList.toggle('expanded');
-            formatInstructions.classList.toggle('expanded');
-        });
-    }
+        if (header && content) {
+            // Iniciar com a seção colapsada
+            content.classList.remove('expanded');
+            section.classList.remove('expanded');
+            
+            // Adicionar evento de clique
+            header.addEventListener('click', function() {
+                content.classList.toggle('expanded');
+                section.classList.toggle('expanded');
+            });
+        }
+    });
 }

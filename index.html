@@ -27,6 +27,15 @@
             </div>
             <div id="upload-status"></div>
 
+            <div class="expandable-section book-section">
+                <h3 class="expandable-header">Livros disponíveis<span class="expand-icon">▼</span></h3>
+                <div class="expandable-content">
+                    <div id="book-list" class="book-list">
+                        <!-- A lista de livros será preenchida dinamicamente -->
+                    </div>
+                </div>
+            </div>
+
             <div class="search-box">
                 <input type="text" id="reference" placeholder="Ex: Gn 30,5-7.15.20-25">
                 <button id="search">Buscar</button>
@@ -39,10 +48,7 @@
                 <button id="copy-button" class="copy-button" title="Copiar texto">Copiar</button>
             </div>
 
-            <div id="book-list" class="book-list">
-            </div>
-
-            <div class="format-instructions">
+            <div class="format-instructions expandable-section">
                 <h3 class="expandable-header">Como usar<span class="expand-icon">▼</span></h3>
                 <div class="expandable-content">
                     <p>Digite a referência bíblica em um dos seguintes formatos:</p>

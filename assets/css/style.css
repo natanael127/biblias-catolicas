@@ -222,8 +222,8 @@ button:hover {
     width: 100%;
 }
 
-/* Estilos para a seção expansível "Como usar" */
-.format-instructions {
+/* Estilos para seções expansíveis gerais */
+.expandable-section {
     margin-bottom: 20px;
     border: 1px solid #eee;
     border-radius: 4px;
@@ -262,8 +262,18 @@ button:hover {
     padding: 15px;
 }
 
-.format-instructions.expanded .expand-icon {
+.expandable-section.expanded .expand-icon {
     transform: rotate(180deg);
+}
+
+/* Remover estilos específicos da format-instructions que agora são gerais */
+.format-instructions {
+    margin-bottom: 20px;
+}
+
+/* Estilo específico para a seção de livros */
+.book-section .expandable-content.expanded {
+    max-height: 800px; /* Mais altura para acomodar muitos livros */
 }
 
 /* Media queries para responsividade */
