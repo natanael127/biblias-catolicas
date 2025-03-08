@@ -88,7 +88,89 @@ function getBibleLoadSuccessMessage(bibleData, includeBookCount = false) {
     return `<span class="success">${message}.</span>`;
 }
 
-// Função para carregar Bíblias predefinidas
+// Função central para processar dados de uma Bíblia
+function processBibleData(data, uploadStatus) {
+    if (data && data.bible && data.bible.books) {
+        bibleData = data;
+        uploadStatus.innerHTML = getBibleLoadSuccessMessage(bibleData);
+        
+        // Preencher e mostrar a barra lateral com os livros disponíveis
+        populateBooksSidebar(bibleData.bible.books);
+        
+        // Atualizar o resultado se já houver uma referência
+        const reference = document.getElementById('reference').value.trim();
+        if (reference) {
+            searchVerse();
+        }
+        
+        return true;
+    } else {
+        uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
+        bibleData = null;
+        return false;
+    }
+}
+
+// Função para carregar Bíblia de um arquivo predefinido
+async function loadBibleFromPredefined(bibleName, uploadStatus) {
+    try {
+        uploadStatus.innerHTML = '<span>Carregando...</span>';
+        
+        // Carregar o arquivo JSON da pasta de Bíblias
+        const response = await fetch(`assets/data/bibles/json/${bibleName}.json`);
+        
+        if (!response.ok) {
+            throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return processBibleData(data, uploadStatus);
+    } catch (error) {
+        console.error('Erro ao carregar a Bíblia:', error);
+        uploadStatus.innerHTML = `<span class="error">Falha ao carregar a Bíblia: ${error.message}</span>`;
+        return false;
+    }
+}
+
+// Função para processar um arquivo JSON carregado pelo usuário
+function loadBibleFromFile(file, uploadStatus) {
+    return new Promise((resolve, reject) => {
+        if (!file) {
+            uploadStatus.innerHTML = '<span class="error">Nenhum arquivo selecionado.</span>';
+            resolve(false);
+            return;
+        }
+        
+        if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+            uploadStatus.innerHTML = '<span class="error">Por favor, selecione um arquivo JSON válido.</span>';
+            resolve(false);
+            return;
+        }
+        
+        const fileReader = new FileReader();
+        
+        fileReader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                const success = processBibleData(data, uploadStatus);
+                resolve(success);
+            } catch (parseError) {
+                console.error('Erro ao processar JSON:', parseError);
+                uploadStatus.innerHTML = '<span class="error">O arquivo não contém um JSON válido.</span>';
+                resolve(false);
+            }
+        };
+        
+        fileReader.onerror = function() {
+            uploadStatus.innerHTML = '<span class="error">Erro ao ler o arquivo.</span>';
+            resolve(false);
+        };
+        
+        fileReader.readAsText(file);
+    });
+}
+
+// Atualizar os event listeners para usar as novas funções
 document.getElementById('bible-select').addEventListener('change', async function() {
     const bibleName = this.value;
     const uploadStatus = document.getElementById('upload-status');
@@ -102,38 +184,7 @@ document.getElementById('bible-select').addEventListener('change', async functio
         return;
     }
     
-    try {
-        uploadStatus.innerHTML = '<span>Carregando...</span>';
-        
-        // Carregar o arquivo JSON da pasta de Bíblias
-        const response = await fetch(`assets/data/bibles/json/${bibleName}.json`);
-        
-        if (!response.ok) {
-            throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data && data.bible && data.bible.books) {
-            bibleData = data;
-            uploadStatus.innerHTML = getBibleLoadSuccessMessage(bibleData);
-            
-            // Preencher e mostrar a barra lateral com os livros disponíveis
-            populateBooksSidebar(bibleData.bible.books);
-            
-            // Atualizar o resultado se já houver uma referência
-            const reference = document.getElementById('reference').value.trim();
-            if (reference) {
-                searchVerse();
-            }
-        } else {
-            uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
-            bibleData = null;
-        }
-    } catch (error) {
-        console.error('Erro ao carregar a Bíblia:', error);
-        uploadStatus.innerHTML = `<span class="error">Falha ao carregar a Bíblia: ${error.message}</span>`;
-    }
+    await loadBibleFromPredefined(bibleName, uploadStatus);
 });
 
 // Função para fazer upload do arquivo JSON
@@ -147,54 +198,7 @@ document.getElementById('upload-button').addEventListener('click', async functio
     // Remover seleção de qualquer Bíblia predefinida
     document.querySelectorAll('.bible-option').forEach(btn => btn.classList.remove('selected'));
     
-    if (fileInput.files.length === 0) {
-        uploadStatus.innerHTML = '<span class="error">Nenhum arquivo selecionado.</span>';
-        return;
-    }
-    
-    const file = fileInput.files[0];
-    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-        uploadStatus.innerHTML = '<span class="error">Por favor, selecione um arquivo JSON válido.</span>';
-        return;
-    }
-    
-    try {
-        const fileReader = new FileReader();
-        
-        fileReader.onload = function(event) {
-            try {
-                bibleData = JSON.parse(event.target.result);
-                if (bibleData && bibleData.bible && bibleData.bible.books) {
-                    uploadStatus.innerHTML = getBibleLoadSuccessMessage(bibleData);
-                    
-                    // Preencher e mostrar a barra lateral com os livros disponíveis
-                    populateBooksSidebar(bibleData.bible.books);
-                    
-                    // Atualizar o resultado se já houver uma referência
-                    const reference = document.getElementById('reference').value.trim();
-                    if (reference) {
-                        searchVerse();
-                    }
-                } else {
-                    uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
-                    bibleData = null;
-                }
-            } catch (parseError) {
-                console.error('Erro ao processar JSON:', parseError);
-                uploadStatus.innerHTML = '<span class="error">O arquivo não contém um JSON válido.</span>';
-                bibleData = null;
-            }
-        };
-        
-        fileReader.onerror = function() {
-            uploadStatus.innerHTML = '<span class="error">Erro ao ler o arquivo.</span>';
-        };
-        
-        fileReader.readAsText(file);
-    } catch (error) {
-        console.error('Erro ao processar o arquivo:', error);
-        uploadStatus.innerHTML = '<span class="error">Erro ao processar o arquivo.</span>';
-    }
+    await loadBibleFromFile(fileInput.files[0], uploadStatus);
 });
 
 // Função para preencher a barra lateral com os livros da Bíblia
