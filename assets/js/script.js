@@ -295,7 +295,7 @@ async function searchVerse() {
     // Encontrar o livro
     const book = bibleData.bible.books.find(b => 
         b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
-        b.name.toLowerCase().startsWith(parsedRef.book.toLowerCase())
+        b.name.toLowerCase() == parsedRef.book.toLowerCase()
     );
     
     if (!book) {
