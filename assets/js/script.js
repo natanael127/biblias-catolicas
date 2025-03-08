@@ -326,7 +326,7 @@ async function fetchRepositoryInfo() {
         
         if (commits.length > 0) {
             const commitDate = new Date(commits[0].commit.author.date);
-            const formattedDate = commitDate.toLocaleDateString();
+            const formattedDate = `${commitDate.getFullYear()}-${String(commitDate.getMonth() + 1).padStart(2, '0')}-${String(commitDate.getDate()).padStart(2, '0')}`;
             infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
         }
         
