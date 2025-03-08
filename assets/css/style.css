@@ -96,12 +96,6 @@ button:hover {
 .verse {
     font-size: 18px;
 }
-.upload-section {
-    border: 1px dashed #ccc;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
 .file-input-container {
     margin-top: 10px;
     display: none; /* Oculto por padrão */

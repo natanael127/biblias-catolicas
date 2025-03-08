@@ -187,12 +187,12 @@ document.getElementById('bible-select').addEventListener('change', async functio
     await loadBibleFromPredefined(bibleName, uploadStatus);
 });
 
-// Função para fazer upload do arquivo JSON
-document.getElementById('upload-button').addEventListener('click', async function() {
-    const fileInput = document.getElementById('bible-file');
+// Listener no input de arquivo
+document.getElementById('bible-file').addEventListener('change', async function() {
     const uploadStatus = document.getElementById('upload-status');
+    uploadStatus.innerHTML = '<span>Carregando...</span>';
 
-    await loadBibleFromFile(fileInput.files[0], uploadStatus);
+    await loadBibleFromFile(this.files[0], uploadStatus);
 });
 
 // Função para preencher a barra lateral com os livros da Bíblia
