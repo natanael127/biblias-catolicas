@@ -36,6 +36,12 @@ function populateBiblesSelect(biblesList) {
         selectElement.appendChild(option);
     });
 
+    // Adicionar opção "Fazer upload..."
+    const uploadOption = document.createElement('option');
+    uploadOption.value = "upload";
+    uploadOption.textContent = "Fazer upload...";
+    selectElement.appendChild(uploadOption);
+
     // Selecionar automaticamente a primeira tradução disponível
     if (selectElement.options.length > 1) {
         selectElement.selectedIndex = 1; // Seleciona a primeira opção após o placeholder
@@ -50,7 +56,27 @@ function populateBiblesSelect(biblesList) {
 document.addEventListener('DOMContentLoaded', function() {
     loadAvailableBibles();
     fetchRepositoryInfo();
+    
+    // Verificar a exibição do container de upload ao carregar a página
+    updateUploadContainerVisibility();
+    
+    // Adicionar event listener para o select de bíblias
+    document.getElementById('bible-select').addEventListener('change', function() {
+        updateUploadContainerVisibility();
+    });
 });
+
+// Nova função para mostrar/esconder o container de upload
+function updateUploadContainerVisibility() {
+    const selectElement = document.getElementById('bible-select');
+    const fileInputContainer = document.querySelector('.file-input-container');
+    
+    if (selectElement.value === "upload") {
+        fileInputContainer.style.display = 'block';
+    } else {
+        fileInputContainer.style.display = 'none';
+    }
+}
 
 // Função para carregar Bíblias predefinidas
 document.getElementById('bible-select').addEventListener('change', async function() {
@@ -59,6 +85,11 @@ document.getElementById('bible-select').addEventListener('change', async functio
     
     if (!bibleName) {
         return; // Se for a opção vazia ("Selecione uma tradução..."), não faz nada
+    }
+    
+    if (bibleName === "upload") {
+        // Se for a opção "Fazer upload...", apenas exibe o container de upload
+        return;
     }
     
     try {

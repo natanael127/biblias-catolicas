@@ -104,6 +104,7 @@ button:hover {
 }
 .file-input-container {
     margin-top: 10px;
+    display: none; /* Oculto por padrão */
 }
 .file-input-container input[type="file"] {
     display: block;
