@@ -188,6 +188,71 @@ button:hover {
     margin-top: 0; /* Remove qualquer margem superior */
 }
 
+/* Estilos para a seção de escolha de Bíblias */
+.preloaded-bibles {
+    margin-bottom: 20px;
+}
+
+.bible-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.bible-option {
+    padding: 10px 15px;
+    background-color: #e7f3ff;
+    border: 1px solid #cce0f5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.bible-option:hover {
+    background-color: #d0e5f7;
+}
+
+.bible-option.selected {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #45a049;
+}
+
+#bible-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cce0f5;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#bible-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider span {
+    padding: 0 10px;
+}
+
 /* Media queries para responsividade */
 @media (max-width: 768px) {
     body {

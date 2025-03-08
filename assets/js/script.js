@@ -1,10 +1,95 @@
 // Variável para armazenar a Bíblia carregada
 let bibleData = null;
 
+// Função para verificar dinamicamente as Bíblias disponíveis
+async function loadAvailableBibles() {
+    try {
+        // Tenta carregar o índice de Bíblias disponíveis
+        const response = await fetch('assets/data/bibles/index.json');
+        
+        if (response.ok) {
+            const biblesList = await response.json();
+            populateBiblesSelect(biblesList);
+        } else {
+            console.error('Arquivo index.json não encontrado. Nenhuma Bíblia disponível para carregar.');
+            // Mantém o select com apenas a opção padrão
+        }
+    } catch (error) {
+        console.error('Erro ao carregar lista de Bíblias:', error);
+    }
+}
+
+// Função para preencher o select com as Bíblias disponíveis
+function populateBiblesSelect(biblesList) {
+    const selectElement = document.getElementById('bible-select');
+    
+    // Limpar opções existentes, exceto a primeira (placeholder)
+    while (selectElement.options.length > 1) {
+        selectElement.remove(1);
+    }
+    
+    // Adicionar as Bíblias disponíveis como opções
+    biblesList.forEach(bible => {
+        const option = document.createElement('option');
+        option.value = bible.id;
+        option.textContent = bible.name;
+        selectElement.appendChild(option);
+    });
+}
+
+// Carregar Bíblias disponíveis quando o documento estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    loadAvailableBibles();
+    fetchRepositoryInfo();
+});
+
+// Função para carregar Bíblias predefinidas
+document.getElementById('bible-select').addEventListener('change', async function() {
+    const bibleName = this.value;
+    const uploadStatus = document.getElementById('upload-status');
+    
+    if (!bibleName) {
+        return; // Se for a opção vazia ("Selecione uma tradução..."), não faz nada
+    }
+    
+    try {
+        uploadStatus.innerHTML = '<span>Carregando...</span>';
+        
+        // Carregar o arquivo JSON da pasta de Bíblias
+        const response = await fetch(`assets/data/bibles/json/${bibleName}.json`);
+        
+        if (!response.ok) {
+            throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.bible && data.bible.books) {
+            bibleData = data;
+            uploadStatus.innerHTML = `<span class="success">Bíblia carregada com sucesso: ${bibleData.bible.name}. ${bibleData.bible.books.length} livros disponíveis.</span>`;
+            
+            // Preencher e mostrar a barra lateral com os livros disponíveis
+            populateBooksSidebar(bibleData.bible.books);
+        } else {
+            uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
+            bibleData = null;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar a Bíblia:', error);
+        uploadStatus.innerHTML = `<span class="error">Falha ao carregar a Bíblia: ${error.message}</span>`;
+    }
+});
+
 // Função para fazer upload do arquivo JSON
 document.getElementById('upload-button').addEventListener('click', async function() {
     const fileInput = document.getElementById('bible-file');
     const uploadStatus = document.getElementById('upload-status');
+    
+    // Resetar seleção da combobox
+    document.getElementById('bible-select').selectedIndex = 0;
+    
+    // Remover seleção de qualquer Bíblia predefinida
+    document.querySelectorAll('.bible-option').forEach(btn => btn.classList.remove('selected'));
     
     if (fileInput.files.length === 0) {
         uploadStatus.innerHTML = '<span class="error">Nenhum arquivo selecionado.</span>';

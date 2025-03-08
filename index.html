@@ -19,6 +19,23 @@
             
             <div class="upload-section">
                 <h2>Carregar a Bíblia</h2>
+                
+                <div class="preloaded-bibles">
+                    <h3>Bíblias Disponíveis</h3>
+                    <p>Selecione uma das traduções disponíveis:</p>
+                    <div class="bible-selection">
+                        <select id="bible-select">
+                            <option value="">Selecione uma tradução...</option>
+                            <option value="CNBB">CNBB</option>
+                            <option value="Ave-Maria">Ave Maria</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+                
                 <p>Faça o upload do arquivo JSON da Bíblia</p>
                 <div class="file-input-container">
                     <input type="file" id="bible-file" accept=".json">
