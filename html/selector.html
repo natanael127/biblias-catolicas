@@ -74,6 +74,28 @@
             display: block;
             margin-top: 10px;
         }
+        .verses-list {
+            margin-top: 10px;
+        }
+        .verse-item {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .verse-number {
+            font-weight: bold;
+            color: #666;
+            margin-right: 5px;
+        }
+        .verse-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .verse-omission {
+            font-weight: bold;
+            color: #666;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -152,6 +174,55 @@
             }
         });
 
+        // Função para analisar referências complexas
+        function parseReference(reference) {
+            // Padrão básico: Livro Capítulo[,Versículo(s)]
+            const basicPattern = /^([A-Za-z0-9]+)\s+(\d+)(?:,(.+))?$/;
+            const match = reference.match(basicPattern);
+            
+            if (!match) {
+                return null;
+            }
+            
+            const [, bookAbbr, chapter, verseRef] = match;
+            
+            // Se não houver referência de versículo, é o capítulo inteiro
+            if (!verseRef) {
+                return {
+                    book: bookAbbr,
+                    chapter: parseInt(chapter),
+                    verses: 'all'
+                };
+            }
+            
+            // Analisar a parte de versículos (pode conter múltiplas referências separadas por ponto)
+            const verseSegments = verseRef.split('.');
+            let verses = [];
+            
+            for (const segment of verseSegments) {
+                // Verificar se é um intervalo (ex: 5-7) ou um único versículo
+                if (segment.includes('-')) {
+                    const [start, end] = segment.split('-').map(v => parseInt(v.trim()));
+                    if (!isNaN(start) && !isNaN(end)) {
+                        for (let i = start; i <= end; i++) {
+                            verses.push(i);
+                        }
+                    }
+                } else {
+                    const verseNumber = parseInt(segment.trim());
+                    if (!isNaN(verseNumber)) {
+                        verses.push(verseNumber);
+                    }
+                }
+            }
+            
+            return {
+                book: bookAbbr,
+                chapter: parseInt(chapter),
+                verses: verses
+            };
+        }
+
         // Função para buscar o versículo
         async function searchVerse() {
             const reference = document.getElementById('reference').value.trim();
@@ -163,48 +234,81 @@
                 return;
             }
             
-            // Validar entrada
-            const regex = /^([A-Za-z0-9]+)\s+(\d+),(\d+)$/;
-            const match = reference.match(regex);
+            // Analisar a referência
+            const parsedRef = parseReference(reference);
             
-            if (!match) {
-                resultElement.innerHTML = '<span class="error">Formato inválido. Use o formato "Livro capítulo,versículo" (exemplo: "Gn 30,4")</span>';
+            if (!parsedRef) {
+                resultElement.innerHTML = '<span class="error">Formato inválido. Exemplos válidos:<br>Gn 30,5 - Um único versículo<br>Gn 30,5-7 - Intervalo de versículos<br>Gn 30 - Capítulo inteiro<br>Gn 30,5-7.15.20-25 - Combinação de versículos</span>';
                 return;
             }
             
-            const [, bookAbbr, chapter, verse] = match;
-            
             // Encontrar o livro
             const book = bibleData.bible.books.find(b => 
-                b.abbreviation.toLowerCase() === bookAbbr.toLowerCase() || 
-                b.name.toLowerCase().startsWith(bookAbbr.toLowerCase())
+                b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
+                b.name.toLowerCase().startsWith(parsedRef.book.toLowerCase())
             );
             
             if (!book) {
-                resultElement.innerHTML = `<span class="error">Livro "${bookAbbr}" não encontrado.</span>`;
+                resultElement.innerHTML = `<span class="error">Livro "${parsedRef.book}" não encontrado.</span>`;
                 return;
             }
             
             // Verificar se o capítulo existe
-            const chapterIndex = parseInt(chapter) - 1;
+            const chapterIndex = parsedRef.chapter - 1;
             if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
-                resultElement.innerHTML = `<span class="error">Capítulo ${chapter} não encontrado em ${book.name}.</span>`;
+                resultElement.innerHTML = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
                 return;
             }
             
-            // Verificar se o versículo existe
-            const verseIndex = parseInt(verse) - 1;
-            if (verseIndex < 0 || verseIndex >= book.chapters[chapterIndex].length) {
-                resultElement.innerHTML = `<span class="error">Versículo ${verse} não encontrado em ${book.name} ${chapter}.</span>`;
-                return;
+            // Preparar o HTML para exibir os versículos
+            let resultHTML = `<div class="reference">${book.name} ${parsedRef.chapter}</div>`;
+            
+            // Capítulo inteiro
+            if (parsedRef.verses === 'all') {
+                const allVerses = [];
+                
+                for (let i = 0; i < book.chapters[chapterIndex].length; i++) {
+                    const verseText = book.chapters[chapterIndex][i];
+                    if (verseText) { // Verifica se o versículo existe e não é vazio
+                        allVerses.push(verseText);
+                    }
+                }
+                
+                // Concatenar todos os versículos com espaço
+                resultHTML += `<div class="verse-text">${allVerses.join(' ')}</div>`;
+            } 
+            // Versículos específicos
+            else {
+                // Ordenar os versículos para garantir que estejam em ordem crescente
+                parsedRef.verses.sort((a, b) => a - b);
+                
+                const verseTexts = [];
+                let previousVerseNumber = -1;
+                
+                for (let i = 0; i < parsedRef.verses.length; i++) {
+                    const verseNumber = parsedRef.verses[i];
+                    const verseIndex = verseNumber - 1;
+                    
+                    // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
+                    if (previousVerseNumber !== -1 && verseNumber > previousVerseNumber + 1) {
+                        verseTexts.push('[...]');
+                    }
+                    
+                    if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
+                        const verseText = book.chapters[chapterIndex][verseIndex];
+                        if (verseText) { // Verifica se o versículo existe e não é vazio
+                            verseTexts.push(verseText);
+                        }
+                    }
+                    
+                    previousVerseNumber = verseNumber;
+                }
+                
+                // Concatenar os versículos com espaço
+                resultHTML += `<div class="verse-text">${verseTexts.join(' ')}</div>`;
             }
             
-            // Exibir o versículo
-            const verseText = book.chapters[chapterIndex][verseIndex];
-            resultElement.innerHTML = `
-                <div class="reference">${book.name} ${chapter},${verse}</div>
-                <div class="verse">${verseText}</div>
-            `;
+            resultElement.innerHTML = resultHTML;
         }
 
         // Adicionar evento de clique ao botão
