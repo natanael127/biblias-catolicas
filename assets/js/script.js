@@ -330,11 +330,10 @@ async function fetchRepositoryInfo() {
             infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
         }
         
-        footerContainer.innerHTML = `<p>${infoHtml}</p>`;
+        footerContainer.innerHTML = `<p>${infoHtml}</p>` + footerContainer.innerHTML;
         
     } catch (error) {
         console.error('Erro ao buscar informações do repositório:', error);
-        footerContainer.innerHTML = `<p>Seletor de Versículos Bíblicos</p>`;
     }
 }
 
