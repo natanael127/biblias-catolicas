@@ -9,10 +9,53 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-right: 1px solid #ddd;
+            margin-right: 20px;
+            border-radius: 4px;
+            min-height: 300px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+            display: none; /* Inicialmente oculto */
+        }
+        .sidebar.visible {
+            display: block;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .book-item {
+            background-color: #e7f3ff;
+            padding: 5px 8px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #cce0f5;
+            transition: background-color 0.2s;
+        }
+        .book-item:hover {
+            background-color: #d0e5f7;
+        }
+        .main-content {
+            flex: 1;
         }
         .container {
             display: flex;
@@ -130,40 +173,47 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Seletor de Versículos Bíblicos</h1>
-        
-        <div class="upload-section">
-            <h2>Carregar a Bíblia</h2>
-            <p>Faça o upload do arquivo JSON da Bíblia</p>
-            <div class="file-input-container">
-                <input type="file" id="bible-file" accept=".json">
-                <button id="upload-button">Carregar Bíblia</button>
+    <div id="sidebar" class="sidebar">
+        <h3>Livros Disponíveis</h3>
+        <div id="book-list" class="book-list"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Seletor de Versículos Bíblicos</h1>
+            
+            <div class="upload-section">
+                <h2>Carregar a Bíblia</h2>
+                <p>Faça o upload do arquivo JSON da Bíblia</p>
+                <div class="file-input-container">
+                    <input type="file" id="bible-file" accept=".json">
+                    <button id="upload-button">Carregar Bíblia</button>
+                </div>
+                <div id="upload-status"></div>
             </div>
-            <div id="upload-status"></div>
-        </div>
-        
-        <div class="format-instructions">
-            <h3>Como usar:</h3>
-            <p>Digite a referência bíblica em um dos seguintes formatos:</p>
-            <ul>
-                <li><strong>Livro capítulo</strong> - Mostra o capítulo completo (ex: <code>Gn 30</code> para mostrar Gênesis capítulo 30 inteiro)</li>
-                <li><strong>Livro capítulo,versículo</strong> - Mostra um versículo específico (ex: <code>Gn 30,5</code> para Gênesis capítulo 30, versículo 5)</li>
-                <li><strong>Livro capítulo,início-fim</strong> - Mostra um intervalo de versículos (ex: <code>Gn 30,5-7</code> para Gênesis capítulo 30, versículos 5 a 7)</li>
-                <li><strong>Livro capítulo,versículos combinados</strong> - Use ponto para separar versículos ou intervalos não consecutivos (ex: <code>Gn 30,5-7.15.20-25</code> para Gênesis capítulo 30, versículos de 5 a 7, mais o versículo 15, mais os versículos de 20 a 25)</li>
-            </ul>
-        </div>
-        
-        <div class="search-box">
-            <input type="text" id="reference" placeholder="Ex: Gn 30,5-7.15.20-25">
-            <button id="search">Buscar</button>
-        </div>
-        
-        <div class="result-container">
-            <div class="result" id="result">
-                O resultado aparecerá aqui.
+            
+            <div class="format-instructions">
+                <h3>Como usar:</h3>
+                <p>Digite a referência bíblica em um dos seguintes formatos:</p>
+                <ul>
+                    <li><strong>Livro capítulo</strong> - Mostra o capítulo completo (ex: <code>Gn 30</code> para mostrar Gênesis capítulo 30 inteiro)</li>
+                    <li><strong>Livro capítulo,versículo</strong> - Mostra um versículo específico (ex: <code>Gn 30,5</code> para Gênesis capítulo 30, versículo 5)</li>
+                    <li><strong>Livro capítulo,início-fim</strong> - Mostra um intervalo de versículos (ex: <code>Gn 30,5-7</code> para Gênesis capítulo 30, versículos 5 a 7)</li>
+                    <li><strong>Livro capítulo,versículos combinados</strong> - Use ponto para separar versículos ou intervalos não consecutivos (ex: <code>Gn 30,5-7.15.20-25</code> para Gênesis capítulo 30, versículos de 5 a 7, mais o versículo 15, mais os versículos de 20 a 25)</li>
+                </ul>
             </div>
-            <button id="copy-button" class="copy-button" title="Copiar texto">Copiar</button>
+            
+            <div class="search-box">
+                <input type="text" id="reference" placeholder="Ex: Gn 30,5-7.15.20-25">
+                <button id="search">Buscar</button>
+            </div>
+            
+            <div class="result-container">
+                <div class="result" id="result">
+                    O resultado aparecerá aqui.
+                </div>
+                <button id="copy-button" class="copy-button" title="Copiar texto">Copiar</button>
+            </div>
         </div>
     </div>
 
@@ -195,6 +245,9 @@
                         bibleData = JSON.parse(event.target.result);
                         if (bibleData && bibleData.bible && bibleData.bible.books) {
                             uploadStatus.innerHTML = `<span class="success">Bíblia carregada com sucesso: ${bibleData.bible.name}. ${bibleData.bible.books.length} livros disponíveis.</span>`;
+                            
+                            // Preencher e mostrar a barra lateral com os livros disponíveis
+                            populateBooksSidebar(bibleData.bible.books);
                         } else {
                             uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
                             bibleData = null;
@@ -216,6 +269,34 @@
                 uploadStatus.innerHTML = '<span class="error">Erro ao processar o arquivo.</span>';
             }
         });
+
+        // Função para preencher a barra lateral com os livros da Bíblia
+        function populateBooksSidebar(books) {
+            const bookList = document.getElementById('book-list');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Limpar lista atual
+            bookList.innerHTML = '';
+            
+            // Adicionar cada livro à lista
+            books.forEach(book => {
+                const bookElement = document.createElement('div');
+                bookElement.className = 'book-item';
+                bookElement.textContent = book.abbreviation || book.name.substring(0, 3);
+                bookElement.title = book.name;
+                
+                // Adicionar evento de clique para preencher automaticamente o campo de busca apenas com a abreviação
+                bookElement.addEventListener('click', function() {
+                    document.getElementById('reference').value = `${book.abbreviation || book.name.substring(0, 3)}`;
+                    document.getElementById('reference').focus();
+                });
+                
+                bookList.appendChild(bookElement);
+            });
+            
+            // Tornar a barra lateral visível
+            sidebar.classList.add('visible');
+        }
 
         // Função para analisar referências complexas
         function parseReference(reference) {
