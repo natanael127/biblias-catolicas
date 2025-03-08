@@ -263,8 +263,7 @@ document.getElementById('copy-button').addEventListener('click', function() {
 
 // Função para buscar informações do repositório GitHub
 async function fetchRepositoryInfo() {
-    const footer = document.getElementById('repo-footer');
-    const footerContainer = footer.querySelector('.container');
+    const repoInfoDiv = document.getElementById('repo-info');
     
     try {
         // Obter o nome do usuário e do repositório da URL atual
@@ -370,8 +369,7 @@ async function fetchRepositoryInfo() {
             infoHtml += `Commit: <a href="${commits[0].html_url}" target="_blank">${commits[0].sha.substring(0, 7)}</a> (${formattedDate})`;
         }
         
-        const currentHTML = footerContainer.innerHTML;
-        footerContainer.innerHTML = `<p>${infoHtml}</p>` + currentHTML;
+        repoInfoDiv.innerHTML = `<p>${infoHtml}</p>`;
         
     } catch (error) {
         console.error('Erro ao buscar informações do repositório:', error);
