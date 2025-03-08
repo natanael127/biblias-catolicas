@@ -79,6 +79,12 @@ document.getElementById('bible-select').addEventListener('change', async functio
             
             // Preencher e mostrar a barra lateral com os livros disponíveis
             populateBooksSidebar(bibleData.bible.books);
+            
+            // Atualizar o resultado se já houver uma referência
+            const reference = document.getElementById('reference').value.trim();
+            if (reference) {
+                searchVerse();
+            }
         } else {
             uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
             bibleData = null;
@@ -122,6 +128,12 @@ document.getElementById('upload-button').addEventListener('click', async functio
                     
                     // Preencher e mostrar a barra lateral com os livros disponíveis
                     populateBooksSidebar(bibleData.bible.books);
+                    
+                    // Atualizar o resultado se já houver uma referência
+                    const reference = document.getElementById('reference').value.trim();
+                    if (reference) {
+                        searchVerse();
+                    }
                 } else {
                     uploadStatus.innerHTML = '<span class="error">O arquivo não contém uma estrutura válida da Bíblia.</span>';
                     bibleData = null;
