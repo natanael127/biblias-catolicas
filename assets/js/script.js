@@ -235,10 +235,15 @@ function parseReference(reference) {
     const verseSegments = verseRef.split('.');
     let verses = [];
     
+    allAfterFirst = false;
     for (const segment of verseSegments) {
         // Verificar se é um intervalo (ex: 5-7) ou um único versículo
         if (segment.includes('-')) {
-            const [start, end] = segment.split('-').map(v => parseInt(v.trim()));
+            [start, end] = segment.split('-').map(v => parseInt(v.trim()));
+            if (isNaN(end)) {
+                allAfterFirst = true;
+                end = start;
+            }
             if (!isNaN(start) && !isNaN(end)) {
                 for (let i = start; i <= end; i++) {
                     verses.push(i);
@@ -255,7 +260,8 @@ function parseReference(reference) {
     return {
         book: bookName,
         chapter: parseInt(chapter),
-        verses: verses
+        verses: verses,
+        allAfterFirst: allAfterFirst
     };
 }
 
@@ -300,11 +306,16 @@ async function searchVerse() {
         return;
     }
 
-    // Capítulo inteiro
-    if (parsedRef.verses === null) {
+    firstVerse = 0;
+    if (parsedRef.allAfterFirst == true) {
+        firstVerse = parsedRef.verses[0] - 1;
+        parsedRef.verses = [];
+    }
+    // Versículos contínuos
+    if ((parsedRef.verses === null) || (parsedRef.allAfterFirst == true)) {
         parsedRef.verses = [];
 
-        for (let i = 0; i < book.chapters[chapterIndex].length; i++) {
+        for (let i = firstVerse; i < book.chapters[chapterIndex].length; i++) {
             parsedRef.verses.push(i + 1);
         }
     }
