@@ -344,7 +344,11 @@ async function searchVerse() {
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
         if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
             if (displayOptions.ellipsis) {
-                verseTexts.push('[...]');
+                if (displayOptions.lineBreaks) {
+                    verseTexts.push('[...]<br>');
+                } else {
+                    verseTexts.push('[...]');
+                }
             }
         }
 
@@ -355,12 +359,12 @@ async function searchVerse() {
 
                 // Adicionar número do versículo como sobrescrito
                 if (displayOptions.verseNumbers) {
-                    formattedVerse = `<span class="verse-number-sup">${verseIndex + 1}</span>${formattedVerse}`;
+                    formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
                 }
 
                 // Adicionar quebra de linha
                 if (displayOptions.lineBreaks) {
-                    formattedVerse = `<span class="verse-with-breaks">${formattedVerse}</span>`;
+                    formattedVerse = `${formattedVerse}<br>`;
                 }
 
                 verseTexts.push(formattedVerse);
@@ -425,36 +429,14 @@ document.getElementById('copy-button').addEventListener('click', function() {
     const verseTextElement = document.querySelector('.verse-text');
     
     if (verseTextElement) {
-        // Se tiver quebras de linha, precisamos manter a formatação ao copiar
-        if (displayOptions.lineBreaks) {
-            // Converter o HTML com quebras de linha para texto com quebras de linha reais
-            const verses = verseTextElement.querySelectorAll('.verse-with-breaks');
-            const verseTexts = [];
-            
-            verses.forEach(verse => {
-                // Remover os números de versículo ao copiar, se estiverem presentes
-                let verseText = verse.innerHTML;
-                if (displayOptions.verseNumbers) {
-                    verseText = verseText.replace(/<span class="verse-number-sup">\d+<\/span>/g, '');
-                }
-                
-                // Extrair apenas o texto sem as tags
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = verseText;
-                verseTexts.push(tempDiv.textContent);
-            });
-            
-            textToCopy = verseTexts.join('\n');
-        } else {
-            // Copiar o texto normal sem quebras de linha
-            textToCopy = verseTextElement.textContent;
-        }
-        
+        textToCopy = verseTextElement.innerHTML.replace(/<br>/g, '\n');
+        textToCopy = textToCopy.replace(/<[^>]+>/g, '');
+
         // Adicionar a referência em parênteses, se a opção estiver ativada
         if (displayOptions.parenthesesCitation) {
             const referenceElement = document.querySelector('.verse-reference');
             if (referenceElement) {
-                textToCopy += '\n' + referenceElement.textContent;
+                textToCopy += referenceElement.textContent;
             }
         }
         

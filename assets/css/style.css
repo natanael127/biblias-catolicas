@@ -171,23 +171,10 @@ button:hover {
     border-color: #0d47a1;
 }
 
-.verse-number-sup {
-    vertical-align: super;
-    font-size: 70%;
-    font-weight: bold;
-    color: #666;
-    margin-right: 2px;
-}
-
 .verse-reference {
     font-weight: normal;
     font-style: italic;
     color: #666;
-}
-
-.verse-with-breaks {
-    display: block;
-    margin-bottom: 5px;
 }
 
 /* Estilos para o rodapé */
