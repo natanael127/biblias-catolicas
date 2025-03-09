@@ -1,7 +1,7 @@
-// Variável para armazenar a Bíblia carregada
+// Global variables
 let bibleData = null;
+let instructionsBackup = null;
 
-// Nova função para obter parâmetros da URL
 function getUrlParameter(name) {
     const searchParams = new URLSearchParams(window.location.search);
     return searchParams.get(name);
@@ -67,6 +67,7 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
 
 // Carregar Bíblias disponíveis quando o documento estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
+    instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
     fetchRepositoryInfo();
     updateUploadContainerVisibility();
@@ -286,7 +287,7 @@ async function searchVerse() {
     const parsedRef = parseReference(reference);
     
     if (!parsedRef) {
-        resultElement.innerHTML = '<span class="error">Formato inválido. Exemplos válidos:<br>Gn 30,5 - Um único versículo<br>Gn 30,5-7 - Intervalo de versículos<br>Gn 30 - Capítulo inteiro<br>Gn 30,5-7.15.20-25 - Combinação de versículos</span>';
+        resultElement.innerHTML = instructionsBackup;
         return;
     }
     
