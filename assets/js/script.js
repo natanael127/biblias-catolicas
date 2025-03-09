@@ -222,20 +222,23 @@ function populateBooksSidebar(books) {
 
 // Função para analisar referências complexas
 function parseReference(reference) {
-    // Padrão básico: Livro Capítulo[,Versículo(s)]
-    const basicPattern = /^([A-Za-z0-9]+)\s+(\d+)(?:,(.+))?$/;
-    const match = reference.match(basicPattern);
+    bookName = reference.split(' ')[0];
+    others = reference.split(' ').slice(1).join(' ');
+
+    // Padrão básico: Capítulo[,Versículo(s)]
+    const basicPattern = /^(\d+)(?:,(.+))?$/;
+    const match = others.match(basicPattern);
     
     if (!match) {
         return null;
     }
     
-    const [, bookAbbr, chapter, verseRef] = match;
-    
+    const [, chapter, verseRef] = match;
+
     // Se não houver referência de versículo, é o capítulo inteiro
     if (!verseRef) {
         return {
-            book: bookAbbr,
+            book: bookName,
             chapter: parseInt(chapter),
             verses: 'all'
         };
@@ -263,7 +266,7 @@ function parseReference(reference) {
     }
     
     return {
-        book: bookAbbr,
+        book: bookName,
         chapter: parseInt(chapter),
         verses: verses
     };
