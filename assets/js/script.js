@@ -381,21 +381,19 @@ async function searchVerse() {
     }
 
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
-    
+
+    if (displayOptions.parenthesesCitation) {
+        verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
+    }
+
     // Conteúdo principal dos versículos
     if (displayOptions.lineBreaks) {
-        joinedVerses = verseTexts.join('<br>');
+        joinedContent = verseTexts.join('<br>');
     } else {
-        joinedVerses = verseTexts.join(' ');
+        joinedContent = verseTexts.join(' ');
     }
-    let verseContent = `<div class="verse-text">${joinedVerses}</div>`;
 
-    // Adicionar referência em parênteses no final, se a opção estiver ativada
-    if (displayOptions.parenthesesCitation) {
-        verseContent += `<div class="verse-reference">(${reference})</div>`;
-    }
-    
-    resultElement.innerHTML += verseContent;
+    resultElement.innerHTML += `<div class="verse-text">${joinedContent}</div>`;
 
     copyButton.classList.add('visible');
 }
@@ -435,14 +433,6 @@ document.getElementById('copy-button').addEventListener('click', function() {
         textToCopy = verseTextElement.innerHTML.replace(/<br>/g, '\n');
         textToCopy = textToCopy.replace(/<[^>]+>/g, '');
 
-        // Adicionar a referência em parênteses, se a opção estiver ativada
-        if (displayOptions.parenthesesCitation) {
-            const referenceElement = document.querySelector('.verse-reference');
-            if (referenceElement) {
-                textToCopy += referenceElement.textContent;
-            }
-        }
-        
         // Copiar para a área de transferência
         navigator.clipboard.writeText(textToCopy).then(() => {
             // Feedback visual de sucesso
