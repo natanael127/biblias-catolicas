@@ -339,16 +339,14 @@ async function searchVerse() {
     let previousVerse = -1;
 
     for (let i = 0; i < parsedRef.verses.length; i++) {
+        isLastVerse = (i == parsedRef.verses.length - 1);
+        isFirstVerse = (i == 0);
         const verseIndex = parsedRef.verses[i];
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
         if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
             if (displayOptions.ellipsis) {
-                if (displayOptions.lineBreaks) {
-                    verseTexts.push('[...]<br>');
-                } else {
-                    verseTexts.push('[...]');
-                }
+                verseTexts.push('[...]');
             }
         }
 
@@ -362,9 +360,17 @@ async function searchVerse() {
                     formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
                 }
 
-                // Adicionar quebra de linha
-                if (displayOptions.lineBreaks) {
-                    formattedVerse = `${formattedVerse}<br>`;
+                if (displayOptions.quotes) {
+                    // Replace all kind of double quotes with single quotes
+                    formattedVerse = formattedVerse.replaceAll(/"/g, "'");
+                    formattedVerse = formattedVerse.replaceAll('“', "'");
+                    formattedVerse = formattedVerse.replaceAll('”', "'");
+                    if (isFirstVerse) {
+                        formattedVerse = `"${formattedVerse}`;
+                    }
+                    if (isLastVerse) {
+                        formattedVerse = `${formattedVerse}"`;
+                    }
                 }
 
                 verseTexts.push(formattedVerse);
@@ -377,13 +383,10 @@ async function searchVerse() {
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
     
     // Conteúdo principal dos versículos
-    joinedVerses = verseTexts.join(' ');
-    if (displayOptions.quotes) {
-        // Replace all kind of double quotes with single quotes
-        joinedVerses = joinedVerses.replaceAll(/"/g, "'");
-        joinedVerses = joinedVerses.replaceAll('“', "'");
-        joinedVerses = joinedVerses.replaceAll('”', "'");
-        joinedVerses = '"' + joinedVerses + '"';
+    if (displayOptions.lineBreaks) {
+        joinedVerses = verseTexts.join('<br>');
+    } else {
+        joinedVerses = verseTexts.join(' ');
     }
     let verseContent = `<div class="verse-text">${joinedVerses}</div>`;
 
