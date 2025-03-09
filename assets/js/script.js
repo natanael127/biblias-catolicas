@@ -377,9 +377,9 @@ async function searchVerse() {
     joinedVerses = verseTexts.join(' ');
     if (displayOptions.quotes) {
         // Replace all kind of double quotes with single quotes
-        joinedVerses = joinedVerses.replace(/"/g, "'");
-        joinedVerses = joinedVerses.replace('“', "'");
-        joinedVerses = joinedVerses.replace('”', "'");
+        joinedVerses = joinedVerses.replaceAll(/"/g, "'");
+        joinedVerses = joinedVerses.replaceAll('“', "'");
+        joinedVerses = joinedVerses.replaceAll('”', "'");
         joinedVerses = '"' + joinedVerses + '"';
     }
     let verseContent = `<div class="verse-text">${joinedVerses}</div>`;
