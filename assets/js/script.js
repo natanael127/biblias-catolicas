@@ -370,7 +370,6 @@ async function searchVerse() {
         previousVerse = verseIndex;
     }
 
-    const formattedReference = `${book.abbreviation} ${parsedRef.chapter}${parsedRef.verses.length > 0 ? ',' + (parsedRef.verses[0] + 1) + (parsedRef.verses.length > 1 ? '-' + (parsedRef.verses[parsedRef.verses.length - 1] + 1) : '') : ''}`;
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
     
     // Conteúdo principal dos versículos
@@ -386,7 +385,7 @@ async function searchVerse() {
 
     // Adicionar referência em parênteses no final, se a opção estiver ativada
     if (displayOptions.parenthesesCitation) {
-        verseContent += `<div class="verse-reference">(${formattedReference})</div>`;
+        verseContent += `<div class="verse-reference">(${reference})</div>`;
     }
     
     resultElement.innerHTML += verseContent;
