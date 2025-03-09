@@ -8,6 +8,12 @@ body {
     flex-direction: row;
     flex-wrap: wrap; /* Permite quebra de linha para elementos flex */
 }
+
+/* Add this new rule to center the page title */
+.page-title {
+    text-align: center;
+}
+
 .book-list {
     display: flex;
     flex-wrap: wrap;
