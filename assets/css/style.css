@@ -212,11 +212,6 @@ button:hover {
     border-color: #4CAF50;
 }
 
-/* Ocultar o botão de busca já que agora a busca é automática */
-#search {
-    display: none;
-}
-
 /* Ajuste para a caixa de busca ocupar todo o espaço disponível */
 .search-box input {
     width: 100%;

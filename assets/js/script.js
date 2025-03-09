@@ -52,13 +52,11 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
     selectElement.appendChild(uploadOption);
 
     // Verificar se a Bíblia especificada na URL está disponível
-    let bibleSelected = false;
     selectElement.selectedIndex = 0;
     if (defaultBibleId) {
         for (let i = 0; i < selectElement.options.length; i++) {
             if (selectElement.options[i].value.toLowerCase() === defaultBibleId.toLowerCase()) {
                 selectElement.selectedIndex = i;
-                bibleSelected = true;
             }
         }
     }
@@ -92,20 +90,9 @@ function updateUploadContainerVisibility() {
     }
 }
 
-// Nova função para gerar mensagem de sucesso quando uma Bíblia é carregada
-function getBibleLoadSuccessMessage(bibleData, includeBookCount = false) {
-    let message = `Bíblia ${bibleData.bible.name} carregada com sucesso`;
-    
-    if (includeBookCount && bibleData.bible.books) {
-        message += `. ${bibleData.bible.books.length} livros disponíveis`;
-    }
-    
-    return `<span class="success">${message}.</span>`;
-}
-
 // Função central para processar dados de uma Bíblia
 function processBibleData(data) {
-    if (data && data.bible && data.bible.books) {
+    if (data && data.bible.books) {
         bibleData = data;
 
         // Preencher e mostrar a barra lateral com os livros disponíveis
@@ -382,9 +369,6 @@ function debounce(func, timeout = 500) {
 const debouncedSearchVerse = debounce(() => {
     searchVerse();
 });
-
-// Adicionar evento de clique ao botão
-document.getElementById('search').addEventListener('click', searchVerse);
 
 // Adicionar evento de tecla Enter no campo de entrada
 document.getElementById('reference').addEventListener('keypress', (event) => {
