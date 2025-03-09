@@ -246,13 +246,15 @@ function parseReference(reference) {
             }
             if (!isNaN(start) && !isNaN(end)) {
                 for (let i = start; i <= end; i++) {
-                    verses.push(i);
+                    if (i > 0) {
+                        verses.push(i - 1);
+                    }
                 }
             }
         } else {
             const verseNumber = parseInt(segment.trim());
             if (!isNaN(verseNumber)) {
-                verses.push(verseNumber);
+                verses.push(verseNumber - 1);
             }
         }
     }
@@ -308,7 +310,7 @@ async function searchVerse() {
 
     firstVerse = 0;
     if (parsedRef.allAfterFirst == true) {
-        firstVerse = parsedRef.verses[0] - 1;
+        firstVerse = parsedRef.verses[0];
         parsedRef.verses = [];
     }
     // Versículos contínuos
@@ -316,21 +318,20 @@ async function searchVerse() {
         parsedRef.verses = [];
 
         for (let i = firstVerse; i < book.chapters[chapterIndex].length; i++) {
-            parsedRef.verses.push(i + 1);
+            parsedRef.verses.push(i);
         }
     }
     // Ordenar os versículos para garantir que estejam em ordem crescente
     parsedRef.verses.sort((a, b) => a - b);
     
     const verseTexts = [];
-    let previousVerseNumber = -1;
+    let previousVerse = -1;
     
     for (let i = 0; i < parsedRef.verses.length; i++) {
-        const verseNumber = parsedRef.verses[i];
-        const verseIndex = verseNumber - 1;
+        const verseIndex = parsedRef.verses[i];
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
-        if (previousVerseNumber !== -1 && verseNumber > previousVerseNumber + 1) {
+        if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
             verseTexts.push('[...]');
         }
 
@@ -341,7 +342,7 @@ async function searchVerse() {
             }
         }
 
-        previousVerseNumber = verseNumber;
+        previousVerse = verseIndex;
     }
 
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
