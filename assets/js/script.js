@@ -227,7 +227,7 @@ function parseReference(reference) {
         return {
             book: bookName,
             chapter: parseInt(chapter),
-            verses: 'all'
+            verses: null
         };
     }
     
@@ -299,61 +299,44 @@ async function searchVerse() {
         resultElement.innerHTML = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
         return;
     }
-    
-    // Preparar o HTML para exibir os versículos
-    let resultHTML = `<div class="reference">${book.name}</div>`;
-    
+
     // Capítulo inteiro
-    if (parsedRef.verses === 'all') {
-        const allVerses = [];
-        
+    if (parsedRef.verses === null) {
+        parsedRef.verses = [];
+
         for (let i = 0; i < book.chapters[chapterIndex].length; i++) {
-            const verseText = book.chapters[chapterIndex][i];
+            parsedRef.verses.push(i + 1);
+        }
+    }
+    // Ordenar os versículos para garantir que estejam em ordem crescente
+    parsedRef.verses.sort((a, b) => a - b);
+    
+    const verseTexts = [];
+    let previousVerseNumber = -1;
+    
+    for (let i = 0; i < parsedRef.verses.length; i++) {
+        const verseNumber = parsedRef.verses[i];
+        const verseIndex = verseNumber - 1;
+
+        // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
+        if (previousVerseNumber !== -1 && verseNumber > previousVerseNumber + 1) {
+            verseTexts.push('[...]');
+        }
+
+        if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
+            const verseText = book.chapters[chapterIndex][verseIndex];
             if (verseText) { // Verifica se o versículo existe e não é vazio
-                allVerses.push(verseText);
+                verseTexts.push(verseText);
             }
         }
-        
-        // Concatenar todos os versículos com espaço
-        resultHTML += `<div class="verse-text">${allVerses.join(' ')}</div>`;
-    } 
-    // Versículos específicos
-    else {
-        // Ordenar os versículos para garantir que estejam em ordem crescente
-        parsedRef.verses.sort((a, b) => a - b);
-        
-        const verseTexts = [];
-        let previousVerseNumber = -1;
-        
-        for (let i = 0; i < parsedRef.verses.length; i++) {
-            const verseNumber = parsedRef.verses[i];
-            const verseIndex = verseNumber - 1;
-            
-            // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
-            if (previousVerseNumber !== -1 && verseNumber > previousVerseNumber + 1) {
-                verseTexts.push('[...]');
-            }
-            
-            if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
-                const verseText = book.chapters[chapterIndex][verseIndex];
-                if (verseText) { // Verifica se o versículo existe e não é vazio
-                    verseTexts.push(verseText);
-                }
-            }
-            
-            previousVerseNumber = verseNumber;
-        }
-        
-        // Concatenar os versículos com espaço
-        resultHTML += `<div class="verse-text">${verseTexts.join(' ')}</div>`;
+
+        previousVerseNumber = verseNumber;
     }
-    
-    resultElement.innerHTML = resultHTML;
-    
-    // Exibir o botão de copiar apenas quando temos um resultado válido
-    if (resultHTML.includes('verse-text')) {
-        copyButton.classList.add('visible');
-    }
+
+    resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
+    resultElement.innerHTML += `<div class="verse-text">${verseTexts.join(' ')}</div>`;
+
+    copyButton.classList.add('visible');
 }
 
 // Função de debounce para limitar a frequência de chamadas
