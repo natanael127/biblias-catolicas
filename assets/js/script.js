@@ -11,6 +11,31 @@ const displayOptions = {
     parenthesesCitation: false
 };
 
+// Funções para salvar e carregar preferências de tradução e referência
+function saveBiblePreference(bibleId) {
+    localStorage.setItem('selectedBible', bibleId);
+}
+
+function saveReferencePreference(reference) {
+    localStorage.setItem('lastReference', reference);
+}
+
+function loadUserPreferences() {
+    // Carregar tradução salva (terá prioridade menor que parâmetros de URL)
+    const savedBible = localStorage.getItem('selectedBible');
+    
+    // Carregar última referência
+    const savedReference = localStorage.getItem('lastReference');
+    if (savedReference) {
+        document.getElementById('reference').value = savedReference;
+    }
+    
+    return { 
+        savedBible: savedBible,
+        savedReference: savedReference 
+    };
+}
+
 function getUrlParameter(name) {
     const searchParams = new URLSearchParams(window.location.search);
     return searchParams.get(name);
@@ -22,12 +47,18 @@ async function loadAvailableBibles() {
         // Obtém o parâmetro 'bible' da URL
         const bibleParam = getUrlParameter('bible');
         
+        // Carrega preferências salvas
+        const preferences = loadUserPreferences();
+        
+        // Prioridade: 1º parâmetro da URL, 2º preferência salva
+        const defaultBible = bibleParam || preferences.savedBible;
+        
         // Tenta carregar o índice de Bíblias disponíveis
         const response = await fetch('assets/data/bibles/index.json');
         
         if (response.ok) {
             const biblesList = await response.json();
-            populateBiblesSelect(biblesList, bibleParam);
+            populateBiblesSelect(biblesList, defaultBible);
         } else {
             console.error('Arquivo index.json não encontrado. Nenhuma Bíblia disponível para carregar.');
             // Mantém o select com apenas a opção padrão
@@ -60,12 +91,13 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
     uploadOption.textContent = "Fazer upload...";
     selectElement.appendChild(uploadOption);
 
-    // Verificar se a Bíblia especificada na URL está disponível
+    // Verificar se a Bíblia especificada na URL ou salva está disponível
     selectElement.selectedIndex = 0;
     if (defaultBibleId) {
         for (let i = 0; i < selectElement.options.length; i++) {
             if (selectElement.options[i].value.toLowerCase() === defaultBibleId.toLowerCase()) {
                 selectElement.selectedIndex = i;
+                break;
             }
         }
     }
@@ -86,6 +118,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', function() {
         updateUploadContainerVisibility();
+        
+        // Salvar a tradução escolhida (se não for upload)
+        if (this.value && this.value !== "upload") {
+            saveBiblePreference(this.value);
+        }
+    });
+    
+    // Adicionar event listener para salvar referência quando alterar
+    document.getElementById('reference').addEventListener('change', function() {
+        saveReferencePreference(this.value);
+    });
+    
+    // Salvar referência também ao pressionar Enter
+    document.getElementById('reference').addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            saveReferencePreference(document.getElementById('reference').value);
+        }
     });
 });
 
@@ -283,6 +332,9 @@ async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
     const resultElement = document.getElementById('result');
     const copyButton = document.getElementById('copy-button');
+    
+    // Salvar a referência atual ao pesquisar
+    saveReferencePreference(reference);
     
     // Ocultar botão de copiar ao iniciar nova busca
     copyButton.classList.remove('visible');
