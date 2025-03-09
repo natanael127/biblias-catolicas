@@ -2,6 +2,15 @@
 let bibleData = null;
 let instructionsBackup = null;
 
+// Opções de formatação
+const displayOptions = {
+    quotes: true,
+    verseNumbers: false,
+    lineBreaks: false,
+    ellipsis: true,
+    parenthesesCitation: false
+};
+
 function getUrlParameter(name) {
     const searchParams = new URLSearchParams(window.location.search);
     return searchParams.get(name);
@@ -72,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchRepositoryInfo();
     updateUploadContainerVisibility();
     setupExpandableSections();
+    setupControlButtons();
 
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', function() {
@@ -327,27 +337,59 @@ async function searchVerse() {
     
     const verseTexts = [];
     let previousVerse = -1;
-    
+
     for (let i = 0; i < parsedRef.verses.length; i++) {
         const verseIndex = parsedRef.verses[i];
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
         if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
-            verseTexts.push('[...]');
+            if (displayOptions.ellipsis) {
+                verseTexts.push('[...]');
+            }
         }
 
         if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
             const verseText = book.chapters[chapterIndex][verseIndex];
             if (verseText) { // Verifica se o versículo existe e não é vazio
-                verseTexts.push(verseText);
+                let formattedVerse = verseText;
+
+                // Adicionar número do versículo como sobrescrito
+                if (displayOptions.verseNumbers) {
+                    formattedVerse = `<span class="verse-number-sup">${verseIndex + 1}</span>${formattedVerse}`;
+                }
+
+                // Adicionar quebra de linha
+                if (displayOptions.lineBreaks) {
+                    formattedVerse = `<span class="verse-with-breaks">${formattedVerse}</span>`;
+                }
+
+                verseTexts.push(formattedVerse);
             }
         }
 
         previousVerse = verseIndex;
     }
 
+    const formattedReference = `${book.abbreviation} ${parsedRef.chapter}${parsedRef.verses.length > 0 ? ',' + (parsedRef.verses[0] + 1) + (parsedRef.verses.length > 1 ? '-' + (parsedRef.verses[parsedRef.verses.length - 1] + 1) : '') : ''}`;
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
-    resultElement.innerHTML += `<div class="verse-text">${verseTexts.join(' ')}</div>`;
+    
+    // Conteúdo principal dos versículos
+    joinedVerses = verseTexts.join(' ');
+    if (displayOptions.quotes) {
+        // Replace all kind of double quotes with single quotes
+        joinedVerses = joinedVerses.replace(/"/g, "'");
+        joinedVerses = joinedVerses.replace('“', "'");
+        joinedVerses = joinedVerses.replace('”', "'");
+        joinedVerses = '"' + joinedVerses + '"';
+    }
+    let verseContent = `<div class="verse-text">${joinedVerses}</div>`;
+
+    // Adicionar referência em parênteses no final, se a opção estiver ativada
+    if (displayOptions.parenthesesCitation) {
+        verseContent += `<div class="verse-reference">(${formattedReference})</div>`;
+    }
+    
+    resultElement.innerHTML += verseContent;
 
     copyButton.classList.add('visible');
 }
@@ -378,11 +420,44 @@ document.getElementById('reference').addEventListener('input', debouncedSearchVe
 
 // Função para copiar o texto bíblico para o clipboard
 document.getElementById('copy-button').addEventListener('click', function() {
-    // Selecionar apenas o texto bíblico, não a referência
+    let textToCopy = '';
+    
+    // Obter o texto bíblico
     const verseTextElement = document.querySelector('.verse-text');
     
     if (verseTextElement) {
-        const textToCopy = verseTextElement.textContent;
+        // Se tiver quebras de linha, precisamos manter a formatação ao copiar
+        if (displayOptions.lineBreaks) {
+            // Converter o HTML com quebras de linha para texto com quebras de linha reais
+            const verses = verseTextElement.querySelectorAll('.verse-with-breaks');
+            const verseTexts = [];
+            
+            verses.forEach(verse => {
+                // Remover os números de versículo ao copiar, se estiverem presentes
+                let verseText = verse.innerHTML;
+                if (displayOptions.verseNumbers) {
+                    verseText = verseText.replace(/<span class="verse-number-sup">\d+<\/span>/g, '');
+                }
+                
+                // Extrair apenas o texto sem as tags
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = verseText;
+                verseTexts.push(tempDiv.textContent);
+            });
+            
+            textToCopy = verseTexts.join('\n');
+        } else {
+            // Copiar o texto normal sem quebras de linha
+            textToCopy = verseTextElement.textContent;
+        }
+        
+        // Adicionar a referência em parênteses, se a opção estiver ativada
+        if (displayOptions.parenthesesCitation) {
+            const referenceElement = document.querySelector('.verse-reference');
+            if (referenceElement) {
+                textToCopy += '\n' + referenceElement.textContent;
+            }
+        }
         
         // Copiar para a área de transferência
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -541,4 +616,67 @@ function setupExpandableSections() {
             });
         }
     });
+}
+
+// Função para configurar os botões de controle
+function setupControlButtons() {
+    // Carregar as preferências salvas, se existirem
+    loadDisplayPreferences();
+    
+    // Configurar cada botão de controle
+    const controlButtons = document.querySelectorAll('.control-button');
+    
+    controlButtons.forEach(button => {
+        // Aplicar o estado inicial (ativo/inativo) com base nas preferências
+        const optionName = button.id.replace('display-', '');
+        const optionKey = convertIdToOptionKey(optionName);
+        
+        if (displayOptions[optionKey]) {
+            button.classList.add('active');
+        }
+        
+        // Adicionar evento de clique
+        button.addEventListener('click', function() {
+            // Alternar estado do botão
+            this.classList.toggle('active');
+            
+            // Atualizar as opções de exibição
+            const optionName = this.id.replace('display-', '');
+            const optionKey = convertIdToOptionKey(optionName);
+            displayOptions[optionKey] = this.classList.contains('active');
+            
+            // Salvar preferências
+            saveDisplayPreferences();
+            
+            // Atualizar o texto exibido
+            searchVerse();
+        });
+    });
+}
+
+// Funções auxiliares para conversão de IDs para chaves de opções
+function convertIdToOptionKey(id) {
+    // Mapeamento de IDs para chaves de opções
+    const map = {
+        'quotes': 'quotes',
+        'verse-numbers': 'verseNumbers',
+        'line-breaks': 'lineBreaks',
+        'ellipsis': 'ellipsis',
+        'parentheses-citation': 'parenthesesCitation'
+    };
+    return map[id] || id;
+}
+
+// Salvar preferências no localStorage
+function saveDisplayPreferences() {
+    localStorage.setItem('bibleDisplayOptions', JSON.stringify(displayOptions));
+}
+
+// Carregar preferências do localStorage
+function loadDisplayPreferences() {
+    const savedOptions = localStorage.getItem('bibleDisplayOptions');
+    if (savedOptions) {
+        const parsedOptions = JSON.parse(savedOptions);
+        Object.assign(displayOptions, parsedOptions);
+    }
 }

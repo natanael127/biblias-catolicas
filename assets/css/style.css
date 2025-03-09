@@ -139,6 +139,57 @@ button:hover {
     background-color: #4CAF50;
 }
 
+/* Estilos para os botões de controle */
+.control-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+    gap: 10px;
+}
+
+.control-button {
+    flex: 1;
+    padding: 8px 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+    color: black;
+}
+
+.control-button:hover {
+    background-color: #e0e0e0;
+}
+
+.control-button.active {
+    background-color: #1565c0;
+    color: white;
+    border-color: #0d47a1;
+}
+
+.verse-number-sup {
+    vertical-align: super;
+    font-size: 70%;
+    font-weight: bold;
+    color: #666;
+    margin-right: 2px;
+}
+
+.verse-reference {
+    font-weight: normal;
+    font-style: italic;
+    color: #666;
+}
+
+.verse-with-breaks {
+    display: block;
+    margin-bottom: 5px;
+}
+
 /* Estilos para o rodapé */
 .about-footer {
     width: 100%; /* Ocupa toda a largura */
