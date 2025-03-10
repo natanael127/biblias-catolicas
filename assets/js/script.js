@@ -41,6 +41,16 @@ function getUrlParameter(name) {
     return searchParams.get(name);
 }
 
+// Função para carregar citação da URL
+function loadQuote() {
+    const quoteParam = getUrlParameter('quote');
+    if (quoteParam) {
+        document.getElementById('reference').value = decodeURIComponent(quoteParam);
+        return true;
+    }
+    return false;
+}
+
 // Função para verificar dinamicamente as Bíblias disponíveis
 async function loadAvailableBibles() {
     try {
@@ -110,6 +120,7 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
+    loadQuote();
     fetchRepositoryInfo();
     updateUploadContainerVisibility();
     setupExpandableSections();
