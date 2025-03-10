@@ -476,33 +476,78 @@ document.getElementById('reference').addEventListener('input', debouncedSearchVe
 
 // Função para copiar o texto bíblico para o clipboard
 document.getElementById('copy-button').addEventListener('click', function() {
-    let textToCopy = '';
+    const copyButton = document.getElementById('copy-button');
     
     // Obter o texto bíblico
     const verseTextElement = document.querySelector('.verse-text');
     
     if (verseTextElement) {
-        textToCopy = verseTextElement.innerHTML.replace(/<br>/g, '\n');
-        textToCopy = textToCopy.replace(/<[^>]+>/g, '');
-
-        // Copiar para a área de transferência
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            // Feedback visual de sucesso
-            const copyButton = document.getElementById('copy-button');
-            copyButton.textContent = 'Copiado!';
-            copyButton.classList.add('success');
-            
-            // Restaurar o botão após 2 segundos
-            setTimeout(() => {
-                copyButton.textContent = 'Copiar';
-                copyButton.classList.remove('success');
-            }, 2000);
-        }).catch(err => {
-            console.error('Erro ao copiar texto: ', err);
-            alert('Não foi possível copiar o texto. Seu navegador pode não suportar esta funcionalidade.');
-        });
+        let textToCopy = verseTextElement.innerHTML
+            .replace(/<br>/g, '\n')
+            .replace(/<[^>]+>/g, ''); // Remove HTML tags
+        
+        // Tentar copiar usando diferentes métodos
+        copyTextToClipboard(textToCopy)
+            .then(() => {
+                // Feedback visual de sucesso
+                copyButton.textContent = 'Copiado!';
+                copyButton.classList.add('success');
+                
+                // Restaurar o botão após 2 segundos
+                setTimeout(() => {
+                    copyButton.textContent = 'Copiar';
+                    copyButton.classList.remove('success');
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Erro ao copiar texto:', err);
+                copyButton.textContent = 'Erro!';
+                copyButton.classList.add('error');
+                
+                setTimeout(() => {
+                    copyButton.textContent = 'Copiar';
+                    copyButton.classList.remove('error');
+                }, 2000);
+            });
     }
 });
+
+function copyTextToClipboard(text) {
+    // Método 1: Clipboard API (mais moderno)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+    }
+    
+    // Método 2: Elemento temporário + execCommand (funciona melhor em dispositivos móveis)
+    return new Promise((resolve, reject) => {
+        try {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            
+            // Tornar o textarea invisível mas presente no DOM
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '0';
+            document.body.appendChild(textArea);
+            
+            // Selecionar e copiar no contexto do evento de clique do usuário
+            textArea.focus();
+            textArea.select();
+            
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (successful) {
+                resolve();
+            } else {
+                reject(new Error('Falha ao copiar texto com execCommand'));
+            }
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
 
 // Função para buscar informações do repositório GitHub
 async function fetchRepositoryInfo() {
