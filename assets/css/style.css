@@ -183,38 +183,6 @@ button:hover {
     color: #666;
 }
 
-/* Estilos para o rodapé */
-.about-footer {
-    width: 100%; /* Ocupa toda a largura */
-    flex-basis: 100%; /* Força uma quebra de linha antes do footer */
-    margin-top: 40px;
-    padding: 15px 0;
-    border-top: 1px solid #ddd;
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-    order: 3; /* Coloca o footer no final */
-    clear: both; /* Garante que esteja abaixo de todos os elementos flutuantes */
-}
-
-.about-footer .container {
-    gap: 1px; /* Reduz o espaço entre elementos no container do footer */
-}
-
-/* Estilização para seção de suporte */
-.support-section {
-    margin-bottom: 2px; /* Reduzido de 10px para 5px */
-}
-
-.repo-info {
-    margin-top: 0; /* Remove qualquer margem superior */
-}
-
-/* Estilos para a seção de escolha de Bíblias */
-.preloaded-bibles {
-    margin-bottom: 20px;
-}
-
 .bible-selection {
     display: flex;
     flex-wrap: wrap;
