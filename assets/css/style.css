@@ -149,7 +149,7 @@ button:hover {
 .control-buttons {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     width: 100%;
     gap: 10px;
 }
@@ -187,7 +187,7 @@ button:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .bible-option {
@@ -231,7 +231,7 @@ button:hover {
 
 /* Estilos para seções expansíveis gerais */
 .expandable-section {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid #eee;
     border-radius: 4px;
 }
@@ -271,11 +271,6 @@ button:hover {
 
 .expandable-section.expanded .expand-icon {
     transform: rotate(180deg);
-}
-
-/* Remover estilos específicos da format-instructions que agora são gerais */
-.format-instructions {
-    margin-bottom: 20px;
 }
 
 /* Estilo específico para a seção de livros */
