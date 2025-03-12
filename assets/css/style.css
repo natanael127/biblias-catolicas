@@ -82,27 +82,9 @@ button:hover {
     color: #1565c0;
     margin-bottom: 10px;
 }
-.verse {
-    font-size: 18px;
-}
-.verse-item {
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-.verse-number {
-    font-weight: bold;
-    color: #666;
-    margin-right: 5px;
-}
 .verse-text {
     font-size: 18px;
     line-height: 1.6;
-}
-.verse-omission {
-    font-weight: bold;
-    color: #666;
-    margin: 0 5px;
 }
 .result-container {
     position: relative;
@@ -174,14 +156,14 @@ button:hover {
 
 .bible-selection {
     display: flex;
-    flex-wrap: nowrap; /* Alterado para nowrap para impedir quebra de linha */
+    flex-wrap: nowrap;
     gap: 10px;
     margin-bottom: 10px;
     align-items: center;
 }
 
 .bible-selection span {
-    white-space: nowrap; /* Impede quebra de linha no texto */
+    white-space: nowrap;
     margin-right: 10px;
 }
 
@@ -205,8 +187,8 @@ button:hover {
 }
 
 #bible-select {
-    width: auto; /* Alterado de 100% para auto */
-    flex: 1; /* Faz o select ocupar o espaço restante */
+    width: auto;
+    flex: 1;
     padding: 10px;
     border: 1px solid #cce0f5;
     border-radius: 4px;
@@ -220,7 +202,6 @@ button:hover {
     border-color: #4CAF50;
 }
 
-/* Ajuste para a caixa de busca ocupar todo o espaço disponível */
 .search-box input {
     width: 100%;
 }
