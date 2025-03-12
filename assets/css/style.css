@@ -85,17 +85,6 @@ button:hover {
 .verse {
     font-size: 18px;
 }
-.file-input-container {
-    margin-top: 10px;
-    display: none; /* Oculto por padrão */
-}
-.file-input-container input[type="file"] {
-    display: block;
-    margin-top: 10px;
-}
-.verses-list {
-    margin-top: 10px;
-}
 .verse-item {
     margin-bottom: 10px;
     border-bottom: 1px solid #eee;
