@@ -45,9 +45,11 @@ def write_json(bible_dict, output_file):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input')
-    parser.add_argument('--output')
+    parser = argparse.ArgumentParser(
+        description='Conversor de módulo Bíblia SWORD para formato JSON',
+    )
+    parser.add_argument('--input', required=True, help='Caminho para o arquivo do módulo SWORD da Bíblia')
+    parser.add_argument('--output', required=True, help='Caminho para o arquivo JSON de saída')
     args = parser.parse_args()
 
     bible_dict = generate_dict(args.input)
