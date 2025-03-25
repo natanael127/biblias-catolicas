@@ -13,27 +13,24 @@ def generate_dict(source_file):
 
     books = bible.get_structure()._books['ot'] + bible.get_structure()._books['nt']
 
-    bib = {}
-    bib['books'] = []
+    bib = {'bible': {}}
+    bib['bible']['name'] = bible_version
+    bib['bible']['books'] = []
+    books_out_list = bib['bible']['books']
 
     for book in books:
+        print(f"Processing book: {book.name}")
         chapters = []
         for chapter in range(1, book.num_chapters+1):
             verses = []
             for verse in range(1, len(book.get_indicies(chapter))+1 ):
-                verses.append({
-                    'verse': verse,
-                    'chapter': chapter,
-                    'name': book.name + " " + str(chapter) + ":" + str(verse),
-                    'text': bible.get(books=[book.name], chapters=[chapter], verses=[verse])
-                    })
-            chapters.append({
-                'chapter': chapter,
-                'name': book.name + " " + str(chapter),
-                'verses': verses
-            })
-        bib['books'].append({
+                verses.append(
+                    bible.get(books=[book.name], chapters=[chapter], verses=[verse])
+                )
+            chapters.append(verses)
+        books_out_list.append({
             'name': book.name,
+            'abbreviation': book.preferred_abbreviation,
             'chapters': chapters
         })
     
