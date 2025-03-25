@@ -1,5 +1,4 @@
 # Based on https://github.com/scrollmapper/bible_databases/blob/a228a19a29099a41c196c2a310cd93e50a390e30/scripts/sword_to_json.py
-# TODO: verbose output
 
 from pysword.modules import SwordModules
 import argparse
