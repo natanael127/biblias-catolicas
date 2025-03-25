@@ -49,11 +49,19 @@ def main():
         description='Conversor de módulo Bíblia SWORD para formato JSON',
     )
     parser.add_argument('--input', required=True, help='Caminho para o arquivo do módulo SWORD da Bíblia')
-    parser.add_argument('--output', required=True, help='Caminho para o arquivo JSON de saída')
+    parser.add_argument('--output', required=False, help='Caminho para o arquivo JSON de saída (opcional, padrão: mesmo nome do input com extensão .json)')
     args = parser.parse_args()
 
+    # Se output não foi fornecido, usa o mesmo nome do arquivo de entrada com extensão .json
+    output_file = args.output
+    if not output_file:
+        splited_path = args.input.split('.')
+        base_name = "".join(splited_path[:-1])
+        output_file = base_name + '.json'
+        print(f"Saída padrão: {output_file}")
+
     bible_dict = generate_dict(args.input)
-    write_json(bible_dict, args.output)
+    write_json(bible_dict, output_file)
 
 if __name__ == "__main__":
     main()
