@@ -73,6 +73,7 @@ def main(txt_dir, json_dir, csv_dir):
         out_dict = {"bible": {}}
         bible_dict = out_dict["bible"]
         bible_dict["name"] = bible_name
+        bible_dict["language"] = "pt"
         bible_dict["books"] = []
         books_dict = bible_dict["books"]
         books_list = os.listdir(bible_path)
@@ -90,8 +91,11 @@ def main(txt_dir, json_dir, csv_dir):
             chapters_list.sort()
             for chapter_file_name in chapters_list:
                 chapter_path = os.path.join(book_path, chapter_file_name)
-                verses_dict = parse_chapter_content(chapter_path)
-                this_book_dict["chapters"].append(verses_dict)
+                list_verses = parse_chapter_content(chapter_path)
+                obj_verses = []
+                for line in list_verses:
+                    obj_verses.append({"text": line})
+                this_book_dict["chapters"].append({"verses": obj_verses})
             books_dict.append(this_book_dict)
         bibles_data.append(out_dict)
         out_path = os.path.join(json_dir, bible_name + ".json")
