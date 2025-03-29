@@ -5,14 +5,16 @@ import json
 import argparse
 
 ABBREVIATION = [
-    "Gn", "Ex", "Lv", "Nm", "Dt", "Js", "Jz", "Rt", "1Sm", "2Sm",
-    "1Rs", "2Rs", "1Cr", "2Cr", "Esd", "Ne", "Tb", "Jt", "Est",
-    "Jó", "Sl", "1Mc", "2Mc", "Pr", "Ecl", "Ct", "Sb", "Eclo", "Is",
-    "Jr", "Lm", "Br", "Ez", "Dn", "Os", "Jl", "Am", "Ab",
-    "Jn", "Mq", "Na", "Hab", "Sf", "Ag", "Zc", "Ml",
-    "Mt", "Mc", "Lc", "Jo", "At", "Rm", "1Cor", "2Cor", "Gl", "Ef",
-    "Fl", "Cl", "1Ts", "2Ts", "1Tm", "2Tm", "Tt", "Fm", "Hb", "Tg",
-    "1Pd", "2Pd", "1Jo", "2Jo", "3Jo", "Jd", "Ap"
+    "Gn", "Ex", "Lv", "Nm", "Dt",
+    "Js", "Jz", "Rt", "1Sm", "2Sm", "1Rs", "2Rs",
+    "1Cr", "2Cr", "Esd", "Ne", "Tb", "Jt", "Est",
+    "Jó", "Sl", "1Mc", "2Mc", "Pr", "Ecl", "Ct", "Sb", "Eclo",
+    "Is", "Jr", "Lm", "Br", "Ez", "Dn",
+    "Os", "Jl", "Am", "Ab", "Jn", "Mq", "Na", "Hab", "Sf", "Ag", "Zc", "Ml",
+    "Mt", "Mc", "Lc", "Jo", "At",
+    "Rm", "1Cor", "2Cor", "Gl", "Ef", "Fl", "Cl",
+    "1Ts", "2Ts", "1Tm", "2Tm", "Tt", "Fm", "Hb",
+    "Tg", "1Pd", "2Pd", "1Jo", "2Jo", "3Jo", "Jd", "Ap"
 ]
 
 def parse_chapter_content(chapter_path):
