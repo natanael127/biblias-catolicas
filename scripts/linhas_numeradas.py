@@ -17,6 +17,19 @@ ABBREVIATION = [
     "Tg", "1Pd", "2Pd", "1Jo", "2Jo", "3Jo", "Jd", "Ap"
 ]
 
+USFM_IDS = [
+    "GEN", "EXO", "LEV", "NUM", "DEU",
+    "JOS", "JDG", "RUT", "1SA", "2SA", "1KI", "2KI",
+    "1CH", "2CH", "EZR", "NEH", "TOB", "JDT", "EST",
+    "JOB", "PSA", "1MA", "2MA", "PRO", "ECC", "SNG", "WIS", "SIR",
+    "ISA", "JER", "LAM", "BAR", "EZK", "DAN",
+    "HOS", "JOL", "AMO", "OBA", "JON", "MIC", "NAM", "HAB", "ZEP", "HAG", "ZEC", "MAL",
+    "MAT", "MRK", "LUK", "JHN", "ACT",
+    "ROM", "1CO", "2CO", "GAL", "EPH", "PHP", "COL",
+    "1TH", "2TH", "1TI", "2TI", "TIT", "PHM", "HEB",
+    "JAS", "1PE", "2PE", "1JN", "2JN", "3JN", "JUD", "REV"
+]
+
 def parse_chapter_content(chapter_path):
 
     chapter_content = None
@@ -85,6 +98,7 @@ def main(txt_dir, json_dir, csv_dir):
             this_book_dict = {
                 "name": book_parsed,
                 "abbreviation": ABBREVIATION[k],
+                "usfm_id": USFM_IDS[k],
                 "chapters": [],
             }
             print(f"Parsing book ({ABBREVIATION[k]}) {book_parsed} from bible {bible_name}")
